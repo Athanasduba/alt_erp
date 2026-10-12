@@ -1,0 +1,29 @@
+# Virtual environment
+venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+
+# Logs
+*.log
+celerybeat-schedule*
+*.pid
+
+# Static & media files (collected locally)
+staticfiles/
+media/
+
+# IDE/editor settings
+.vscode/
+.idea/
+*.swp
+
+# Migrations cache (keep migration files, ignore pycache)
+*/migrations/__pycache__/
