@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Add Motorcycle{% endblock %}
+{% block page_header %}Add Motorcycle{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Add Motorcycle</button>
+      <a href="{% url 'motorcycle_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

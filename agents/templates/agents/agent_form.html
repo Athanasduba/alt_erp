@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="fw-bold mb-4">
+    {% if form.instance.pk %}Update Agent{% else %}Create Agent{% endif %}
+  </h2>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- Agent Base Information -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-primary text-white fw-bold">
+        <i class="bi bi-person-badge"></i> Agent Base Information
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="id_agent_type" class="fw-bold">Agent type</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-diagram-3"></i></span>
+              {{ form.agent_type }}
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_warehouse" class="fw-bold">Warehouse</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-building"></i></span>
+              {{ form.warehouse }}
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_supervisor" class="fw-bold">Supervisor</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person-check"></i></span>
+              {{ form.supervisor }}
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_username" class="fw-bold">Username</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              {{ form.username }}
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_new_password" class="fw-bold">Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-key"></i></span>
+              {{ form.new_password }}
+            </div>
+            <small class="form-text text-muted">{{ form.new_password.help_text }}</small>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_confirm_password" class="fw-bold">Confirm password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-lock"></i></span>
+              <input type="password" name="confirm_password" class="form-control" placeholder="Confirm password">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Individual / Company Tabs -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-primary text-white fw-bold d-flex justify-content-between align-items-center" id="agentTabsHeader">
+        <ul class="nav nav-tabs card-header-tabs" id="agentTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active fw-bold" id="individual-tab"
+                    data-bs-toggle="tab" data-bs-target="#individual" type="button" role="tab">
+              <i class="bi bi-person"></i> Individual Agent
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold" id="company-tab"
+                    data-bs-toggle="tab" data-bs-target="#company" type="button" role="tab">
+              <i class="bi bi-building"></i> Company Agent
+            </button>
+          </li>
+        </ul>
+        <span id="activeBadge" class="badge bg-light text-dark fw-semibold">Active: Individual</span>
+      </div>
+
+      <div class="card-body tab-content">
+        <!-- Individual Agent -->
+        <div class="tab-pane fade show active" id="individual" role="tabpanel">
+          {% for field in individual_form %}
+          <div class="form-group mb-3">
+            <label class="fw-bold">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+            {% for error in field.errors %}
+              <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Company Agent -->
+        <div class="tab-pane fade" id="company" role="tabpanel">
+          {% for field in company_form %}
+          <div class="form-group mb-3">
+            <label class="fw-bold">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+            {% for error in field.errors %}
+              <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="text-end">
+      <button type="submit" class="btn btn-primary px-4">
+        <i class="bi bi-save"></i> Save Agent
+      </button>
+      <a href="{% url 'agent_list' %}" class="btn btn-secondary px-4">
+        <i class="bi bi-x-circle"></i> Cancel
+      </a>
+    </div>
+  </form>
+</div>
+
+<!-- Bootstrap JS for tabs -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const agentTypeSelect = document.getElementById("id_agent_type");
+    const individualPane = document.getElementById("individual");
+    const companyPane = document.getElementById("company");
+    const header = document.getElementById("agentTabsHeader");
+    const individualTab = document.getElementById("individual-tab");
+    const companyTab = document.getElementById("company-tab");
+    const badge = document.getElementById("activeBadge");
+
+    function toggleForms() {
+      if (agentTypeSelect.value === "COMPANY") {
+        individualPane.classList.remove("show", "active");
+        companyPane.classList.add("show", "active");
+
+        header.classList.remove("bg-primary");
+        header.classList.add("bg-info");
+
+        individualTab.classList.remove("active");
+        companyTab.classList.add("active");
+
+        badge.textContent = "Active: Company";
+      } else {
+        companyPane.classList.remove("show", "active");
+        individualPane.classList.add("show", "active");
+
+        header.classList.remove("bg-info");
+        header.classList.add("bg-primary");
+
+        companyTab.classList.remove("active");
+        individualTab.classList.add("active");
+
+        badge.textContent = "Active: Individual";
+      }
+    }
+
+    if (agentTypeSelect) {
+      toggleForms(); // run on page load
+      agentTypeSelect.addEventListener("change", toggleForms);
+    }
+  });
+</script>
+{% endblock %}

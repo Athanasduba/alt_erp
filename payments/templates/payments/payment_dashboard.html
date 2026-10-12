@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% block title %}Payment Dashboard{% endblock %}
+{% block page_header %}Payment Dashboard{% endblock %}
+{% block content %}
+<div class="container mt-4">
+
+  <!-- Summary Cards -->
+<div class="row mb-4" id="accordionPayments">
+  <div class="col-md-2">
+    <div class="card text-white bg-success clickable" data-toggle="collapse" data-target="#fullPayments" aria-expanded="false" aria-controls="fullPayments">
+      <div class="card-body text-center">
+        <h5 class="card-title">Full</h5>
+        <h2>{{ summary.full_count|default:"0" }}</h2>
+        <p><strong>Total:</strong> {{ summary.full_total|default:"0" }} TZS</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card text-white bg-warning clickable" data-toggle="collapse" data-target="#partialPayments" aria-expanded="false" aria-controls="partialPayments">
+      <div class="card-body text-center">
+        <h5 class="card-title">Partial</h5>
+        <h2>{{ summary.partial_count|default:"0" }}</h2>
+        <p><strong>Total:</strong> {{ summary.partial_total|default:"0" }} TZS</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card text-white bg-primary clickable" data-toggle="collapse" data-target="#settledPayments" aria-expanded="false" aria-controls="settledPayments">
+      <div class="card-body text-center">
+        <h5 class="card-title">Settled</h5>
+        <h2>{{ summary.settled_count|default:"0" }}</h2>
+        <p><strong>Total:</strong> {{ summary.settled_total|default:"0" }} TZS</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card text-white bg-danger clickable" data-toggle="collapse" data-target="#failedPayments" aria-expanded="false" aria-controls="failedPayments">
+      <div class="card-body text-center">
+        <h5 class="card-title">Failed</h5>
+        <h2>{{ summary.failed_count|default:"0" }}</h2>
+        <p><strong>Total:</strong> {{ summary.failed_total|default:"0" }} TZS</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card text-dark bg-info clickable" data-toggle="collapse" data-target="#regeneratedPayments" aria-expanded="false" aria-controls="regeneratedPayments">
+      <div class="card-body text-center">
+        <h5 class="card-title">Re-generated</h5>
+        <h2>{{ summary.regenerated_count|default:"0" }}</h2>
+        <p><strong>Total:</strong> {{ summary.regenerated_total|default:"0" }} TZS</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Collapsible Lists -->
+  <div id="fullPayments" class="collapse" data-parent="#accordionPayments">
+    <div class="card mb-3">
+      <div class="card-header bg-success text-white">Full Payments</div>
+      <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+          <thead><tr><th>Transaction</th><th>Customer</th><th>Motorcycle VIN</th><th>Agent</th><th>Amount</th><th>Commission</th><th>Date</th></tr></thead>
+          <tbody>
+            {% for p in full_payments %}
+            <tr>
+              <td>{{ p.transaction_id }}</td>
+              <td>{{ p.customer.full_name|default:"Unknown Customer" }}</td>
+              <td>{{ p.motorcycle.vin|default:"N/A" }}</td>
+              <td>{{ p.agent.name|default:"N/A" }}</td>
+              <td>{{ p.amount_paid }}</td>
+              <td>{{ p.agent_commission }}</td>
+              <td>{{ p.timestamp|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% empty %}<tr><td colspan="7" class="text-center text-muted">No full payments</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="partialPayments" class="collapse" data-parent="#accordionPayments">
+    <div class="card mb-3">
+      <div class="card-header bg-warning text-dark">Partial Payments</div>
+      <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+          <thead><tr><th>Transaction</th><th>Customer</th><th>Motorcycle VIN</th><th>Agent</th><th>Amount Paid</th><th>Arrears Resulting</th><th>Date</th></tr></thead>
+          <tbody>
+            {% for p in partial_payments %}
+            <tr>
+              <td>{{ p.transaction_id }}</td>
+              <td>{{ p.customer.full_name }}</td>
+              <td>{{ p.motorcycle.vin }}</td>
+              <td>{{ p.agent.name|default:"N/A" }}</td>
+              <td>{{ p.amount_paid }}</td>
+              <td>{{ p.arrears }}</td>
+              <td>{{ p.timestamp|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% empty %}<tr><td colspan="7" class="text-center text-muted">No partial payments</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="settledPayments" class="collapse" data-parent="#accordionPayments">
+    <div class="card mb-3">
+      <div class="card-header bg-primary text-white">Settled Payments</div>
+      <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+          <thead><tr><th>Transaction</th><th>Customer</th><th>Motorcycle VIN</th><th>Agent</th><th>Amount Paid</th><th>Credit Resulting</th><th>Date</th></tr></thead>
+          <tbody>
+            {% for p in settled_payments %}
+            <tr>
+              <td>{{ p.transaction_id }}</td>
+              <td>{{ p.customer.full_name }}</td>
+              <td>{{ p.motorcycle.vin }}</td>
+              <td>{{ p.agent.name|default:"N/A" }}</td>
+              <td>{{ p.amount_paid }}</td>
+              <td>{{ p.credit }}</td>
+              <td>{{ p.timestamp|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% empty %}<tr><td colspan="7" class="text-center text-muted">No settled payments</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="failedPayments" class="collapse" data-parent="#accordionPayments">
+    <div class="card mb-3">
+      <div class="card-header bg-danger text-white">Failed Payments</div>
+      <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+          <thead><tr><th>Transaction</th><th>Customer</th><th>Motorcycle VIN</th><th>Agent</th><th>Amount</th><th>Reason</th><th>Date</th><th>Actions</th></tr></thead>
+          <tbody>
+            {% for p in failed_payments %}
+            <tr>
+              <td>{{ p.transaction_id }}</td>
+              <td>{{ p.customer.full_name }}</td>
+              <td>{{ p.motorcycle.vin }}</td>
+              <td>{{ p.agent.name|default:"N/A" }}</td>
+              <td>{{ p.amount_paid }}</td>
+              <td>{{ p.reason|default:"Not Provided" }}</td>
+              <td>{{ p.timestamp|date:"Y-m-d H:i" }}</td>
+              <td>
+                {% if user.is_admin or user.is_manager or user.is_officer %}
+                  <a href="{% url 'regenerate_payment' p.id %}" class="btn btn-sm btn-primary">Re-generate</a>
+                {% else %}
+                  <span class="text-muted">No actions</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}<tr><td colspan="8" class="text-center text-muted">No failed payments</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="regeneratedPayments" class="collapse" data-parent="#accordionPayments">
+    <div class="card mb-3">
+      <div class="card-header bg-info text-dark">Re-generated Payments</div>
+      <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+          <thead>
+            <tr>
+              <th>ERP Transaction</th>
+              <th>Selcom Transaction</th>
+              <th>Customer</th>
+              <th>Motorcycle VIN</th>
+              <th>Agent</th>
+              <th>Amount</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for log in regenerated_logs %}
+            <tr class="table-info">
+              <td>{{ log.transaction_id|default:"N/A" }}</td>
+              <td>{{ log.selcom_transaction_id|default:"N/A" }}</td>
+              <td>{{ log.customer_name|default:"Unknown Customer" }}</td>
+              <td>{{ log.motorcycle_vin|default:"N/A" }}</td>
+              <td>{{ log.agent_name|default:"N/A" }}</td>
+              <td>{{ log.amount|default:"0" }}</td>
+              <td>{{ log.created_on|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" class="text-center text-muted">No re-generated payments</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

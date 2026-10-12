@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Agent Details</h2>
+
+    <p><strong>Username:</strong> {{ agent.username }}</p>
+    <p><strong>Type:</strong> {{ agent.agent_type }}</p>
+    <p><strong>Warehouse:</strong> {{ agent.warehouse }}</p>
+    <p><strong>Supervisor:</strong> {{ agent.supervisor }}</p>
+    <p><strong>Created On:</strong> {{ agent.created_on }}</p>
+
+    {% if agent.agent_type == "INDIVIDUAL" %}
+        <h4>Individual Details</h4>
+        <p><strong>Full Name:</strong> {{ agent.individual_details.full_name }}</p>
+        <p><strong>ID:</strong> {{ agent.individual_details.agent_id }}</p>
+        <p><strong>Mobile:</strong> {{ agent.individual_details.mobile_phone }}</p>
+        <p><strong>Office Location:</strong> {{ agent.individual_details.office_location }}</p>
+    {% elif agent.agent_type == "COMPANY" %}
+        <h4>Company Details</h4>
+        <p><strong>Company Name:</strong> {{ agent.company_details.company_name }}</p>
+        <p><strong>INC Number:</strong> {{ agent.company_details.company_inc_number }}</p>
+        <p><strong>TIN:</strong> {{ agent.company_details.tin }}</p>
+        <p><strong>Representative:</strong> {{ agent.company_details.representative_names }}</p>
+    {% endif %}
+
+    <a href="{% url 'agent_update' agent.pk %}" class="btn btn-warning">Edit</a>
+    <a href="{% url 'agent_delete' agent.pk %}" class="btn btn-danger">Delete</a>
+</div>
+{% endblock %}

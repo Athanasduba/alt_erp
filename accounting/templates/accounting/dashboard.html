@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Accounting Dashboard{% endblock %}
+{% block page_header %}Accounting Dashboard{% endblock %}
+{% block content %}
+
+<div class="row">
+  <!-- Credits Total -->
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-success">
+      <div class="inner">
+        <h3>{{ credits_total }}</h3>
+        <p>Total Credits</p>
+      </div>
+      <div class="icon"><i class="fas fa-wallet"></i></div>
+    </div>
+  </div>
+
+  <!-- Arrears Total -->
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-danger">
+      <div class="inner">
+        <h3>{{ arrears_total }}</h3>
+        <p>Total Arrears</p>
+      </div>
+      <div class="icon"><i class="fas fa-exclamation-circle"></i></div>
+    </div>
+  </div>
+
+  <!-- Settled Customers -->
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-info">
+      <div class="inner">
+        <h3>{{ settled_count }}</h3>
+        <p>Settled Customers</p>
+      </div>
+      <div class="icon"><i class="fas fa-check-circle"></i></div>
+    </div>
+  </div>
+
+  <!-- Unsettled Customers -->
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-warning">
+      <div class="inner">
+        <h3>{{ unsettled_count }}</h3>
+        <p>Unsettled Customers</p>
+      </div>
+      <div class="icon"><i class="fas fa-times-circle"></i></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Ledger Entries -->
+  <div class="col-lg-4 col-6">
+    <div class="small-box bg-primary">
+      <div class="inner">
+        <h3>{{ ledger_count }}</h3>
+        <p>Ledger Entries</p>
+      </div>
+      <div class="icon"><i class="fas fa-book"></i></div>
+      <a href="{% url 'ledger_entries' %}" class="small-box-footer">View Details <i class="fas fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+
+  <!-- Agent Accounts -->
+  <div class="col-lg-4 col-6">
+    <div class="small-box bg-secondary">
+      <div class="inner">
+        <h3>{{ agent_count }}</h3>
+        <p>Agent Accounts</p>
+      </div>
+      <div class="icon"><i class="fas fa-user-tie"></i></div>
+      <a href="{% url 'agent_commission' %}" class="small-box-footer">View Details <i class="fas fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+
+  <!-- Commission Payouts -->
+  <div class="col-lg-4 col-6">
+    <div class="small-box bg-dark">
+      <div class="inner">
+        <h3>{{ payout_count }}</h3>
+        <p>Commission Payouts</p>
+      </div>
+      <div class="icon"><i class="fas fa-money-check-alt"></i></div>
+      <a href="{% url 'commission_payout' %}" class="small-box-footer">Pay Commission <i class="fas fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

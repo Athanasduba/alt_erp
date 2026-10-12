@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Add Warehouse{% endblock %}
+{% block page_header %}Add Warehouse{% endblock %}
+{% block content %}
+
+<div class="card card-primary">
+  <div class="card-header">
+    <h3 class="card-title">New Warehouse</h3>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    <div class="card-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="type">Type</label>
+        <select name="type" id="type" class="form-control">
+          <option value="MAIN">Main Warehouse</option>
+          <option value="BRANCH">Branch Warehouse</option>
+          <option value="TEMP">Temporary Storage</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="physical_location">Physical Location</label>
+        <input type="text" name="physical_location" id="physical_location" class="form-control" required>
+      </div>
+    </div>
+    <div class="card-footer text-right">
+      <button type="submit" class="btn btn-primary">Save</button>
+      <a href="{% url 'warehouse_list' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

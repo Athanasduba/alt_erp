@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Customer Aggregation Report{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4 text-primary">Customer Aggregation Report</h2>
+
+  {% include "reports/_export_buttons.html" %}
+
+  <!-- Report Table -->
+  <div class="card">
+    <div class="card-body table-responsive p-0">
+      <table class="table table-hover text-nowrap">
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Total Invoices</th>
+            <th>Total Payments</th>
+            <th>Total Credit</th>
+            <th>Arrears</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in customers %}
+            <tr>
+              <td>{{ c.full_name }}</td>
+              <td>{{ c.total_invoices }}</td>
+              <td>{{ c.total_payments }}</td>
+              <td>{{ c.total_credit }}</td>
+              <td>{{ c.arrears }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5">No data available.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

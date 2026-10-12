@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Motorcycles{% endblock %}
+{% block page_header %}Motorcycles{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+    <h3 class="card-title mb-0">Motorcycle Inventory</h3>
+    <div class="card-tools mt-2 mt-md-0">
+      {% if request.user.role == "STORE" or request.user.role == "ADMIN" or request.user.role == "MANAGER" %}
+        <a href="{% url 'add_motorcycle' %}" class="btn btn-sm btn-info">Add Motorcycle</a>
+      {% endif %}
+      <a href="{% url 'upload_motorcycles_excel' %}" class="btn btn-sm btn-primary">Upload Excel</a>
+      <a href="{% url 'move_motorcycles' %}" class="btn btn-sm btn-success">Move to Warehouse</a>
+    </div>
+  </div>
+
+  <div class="card-body">
+
+    <!-- 🔎 Filter Form -->
+    <form method="get" class="row g-3 mb-3 align-items-end">
+      <!-- VIN search -->
+      <div class="col-md-3">
+        <input type="text" name="vin_search" class="form-control"
+               placeholder="Search by VIN" value="{{ request.GET.vin_search }}">
+      </div>
+
+      <!-- Status dropdown -->
+      <div class="col-md-3">
+        <select name="status" class="form-select">
+          <option value="">Status</option>
+          <option value="NEW" {% if request.GET.status == "NEW" %}selected{% endif %}>New</option>
+          <option value="AVAILABLE" {% if request.GET.status == "AVAILABLE" %}selected{% endif %}>Available</option>
+          <option value="ACTIVE" {% if request.GET.status == "ACTIVE" %}selected{% endif %}>Active</option>
+          <option value="SOLD_CASH" {% if request.GET.status == "SOLD_CASH" %}selected{% endif %}>Sold (Cash)</option>
+          <option value="SOLD_INSTALLMENT" {% if request.GET.status == "SOLD_INSTALLMENT" %}selected{% endif %}>Sold (Installment)</option>
+          <option value="LEASED" {% if request.GET.status == "LEASED" %}selected{% endif %}>Leased</option>
+          <option value="RETAINED" {% if request.GET.status == "RETAINED" %}selected{% endif %}>Retained</option>
+          <option value="RESOLD_CASH" {% if request.GET.status == "RESOLD_CASH" %}selected{% endif %}>Resold (Cash)</option>
+          <option value="RESOLD_INSTALLMENT" {% if request.GET.status == "RESOLD_INSTALLMENT" %}selected{% endif %}>Resold (Installment)</option>
+          <option value="RELEASED" {% if request.GET.status == "RELEASED" %}selected{% endif %}>Re-leased</option>
+          <option value="LEASE_COMPLETED" {% if request.GET.status == "LEASE_COMPLETED" %}selected{% endif %}>Lease Completed</option>
+          <option value="INSTALLMENT_COMPLETED" {% if request.GET.status == "INSTALLMENT_COMPLETED" %}selected{% endif %}>Installment Completed</option>
+          <option value="DELETED" {% if request.GET.status == "DELETED" %}selected{% endif %}>Deleted</option>
+        </select>
+      </div>
+
+      <!-- Warehouse dropdown -->
+      <div class="col-md-3">
+        <select name="warehouse_id" class="form-select">
+          <option value="">Warehouse</option>
+          {% for warehouse in warehouses %}
+            <option value="{{ warehouse.id }}" {% if request.GET.warehouse_id == warehouse.id|stringformat:"s" %}selected{% endif %}>
+              {{ warehouse.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Buttons -->
+      <div class="col-md-1">
+        <button type="submit" class="btn btn-secondary w-100">Filter</button>
+      </div>
+      <div class="col-md-1">
+        <a href="{% url 'motorcycle_list' %}" class="btn btn-outline-danger w-100">Clear</a>
+      </div>
+    </form>
+
+    <!-- ✅ Responsive Table -->
+    <div class="table-responsive">
+      <table class="table table-sm table-bordered table-striped align-middle">
+        <thead class="table-light">
+          <tr>
+            <th></th>
+            <th>VIN</th>
+            <th>Model</th>
+            <th>Brand</th>
+            <th>Category</th>
+            <th>Color</th>
+            <th>Status</th>
+            <th>Warehouse</th>
+            <th>Customer</th>
+            <th>Created By</th>
+            <th>Created At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in motorcycles %}
+          <tr>
+            <td><input type="checkbox" name="motorcycle_ids" value="{{ m.id }}"></td>
+            <td class="text-truncate" style="max-width:150px;">{{ m.vin }}</td>
+            <td class="text-truncate" style="max-width:150px;">{{ m.model }}</td>
+            <td class="text-truncate" style="max-width:150px;">{{ m.brand }}</td>
+            <td>{{ m.get_category_display }}</td>
+            <td>{{ m.color }}</td>
+            <td>{{ m.get_status_display }}</td>
+            <td class="text-truncate" style="max-width:150px;">{{ m.warehouse }}</td>
+            <td class="text-truncate" style="max-width:150px;">{{ m.customer_account }}</td>
+            <td class="text-truncate" style="max-width:150px;">{{ m.created_by }}</td>
+            <td>{{ m.created_at|date:"Y-m-d H:i" }}</td>
+            <td>
+              <a href="{% url 'motorcycle_detail' m.id %}" class="btn btn-sm btn-info">View</a>
+              {% if request.user.role == "STORE" or request.user.role == "ADMIN" or request.user.role == "MANAGER" %}
+                <a href="{% url 'edit_motorcycle' m.id %}" class="btn btn-sm btn-warning">Edit</a>
+              {% endif %}
+              {% if request.user.role == "ADMIN" or request.user.role == "MANAGER" %}
+                <a href="{% url 'delete_motorcycle' m.id %}" class="btn btn-sm btn-danger">Delete</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="12" class="text-center text-muted">No motorcycles found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

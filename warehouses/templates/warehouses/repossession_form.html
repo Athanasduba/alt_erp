@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Initiate Repossession{% endblock %}
+{% block page_header %}Initiate Repossession{% endblock %}
+{% block content %}
+
+<div class="card card-warning">
+  <div class="card-header">
+    <h3 class="card-title">New Repossession Request</h3>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    <div class="card-body">
+      <div class="form-group">
+        <label for="motorcycle">Motorcycle</label>
+        <select name="motorcycle" id="motorcycle" class="form-control">
+          {% for motorcycle in motorcycles %}
+            <option value="{{ motorcycle.id }}">
+              {{ motorcycle.vin }} - {{ motorcycle.model }} (Customer: {{ motorcycle.customer.name }})
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="warehouse">Destination Warehouse</label>
+        <select name="warehouse" id="warehouse" class="form-control">
+          {% for warehouse in warehouses %}
+            <option value="{{ warehouse.id }}">{{ warehouse.name }} ({{ warehouse.get_type_display }})</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="card-footer text-right">
+      <button type="submit" class="btn btn-warning">Submit Repossession</button>
+      <a href="{% url 'warehouse_list' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

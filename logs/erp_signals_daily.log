@@ -1,0 +1,3 @@
+[2026-10-12 15:20:00,040] INFO customers.signals: [Customer Signal] Fired for Heka (APPROVED, LEASE)
+[2026-10-12 15:20:00,307] INFO invoices.signals: [Invoice Signal] Fired for Heka (APPROVED, LEASE)
+[2026-10-12 15:20:00,314] INFO invoices.signals: [Invoice Signal] Skipped duplicate invoice for Heka (LEASE)

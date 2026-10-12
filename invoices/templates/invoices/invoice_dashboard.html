@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+{% block title %}Invoice Dashboard{% endblock %}
+{% block page_header %}Invoice Dashboard{% endblock %}
+{% block content %}
+<div class="container mt-4">
+
+  <!-- Summary Cards -->
+  <div class="row mb-4" id="accordionInvoices">
+    <div class="col-md-2">
+      <div class="card text-white bg-warning clickable" data-toggle="collapse" data-target="#pendingInvoices" aria-expanded="false" aria-controls="pendingInvoices">
+        <div class="card-body text-center">
+          <h5 class="card-title">Pending</h5>
+          <h2>{{ pending_invoices.count }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-white bg-success clickable" data-toggle="collapse" data-target="#paidInvoices" aria-expanded="false" aria-controls="paidInvoices">
+        <div class="card-body text-center">
+          <h5 class="card-title">Paid</h5>
+          <h2>{{ paid_invoices.count }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-white bg-info clickable" data-toggle="collapse" data-target="#partialInvoices" aria-expanded="false" aria-controls="partialInvoices">
+        <div class="card-body text-center">
+          <h5 class="card-title">Partial</h5>
+          <h2>{{ partial_invoices.count }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-white bg-danger clickable" data-toggle="collapse" data-target="#overdueInvoices" aria-expanded="false" aria-controls="overdueInvoices">
+        <div class="card-body text-center">
+          <h5 class="card-title">Overdue</h5>
+          <h2>{{ overdue_invoices.count }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-white bg-dark clickable" data-toggle="collapse" data-target="#defaultedInvoices" aria-expanded="false" aria-controls="defaultedInvoices">
+        <div class="card-body text-center">
+          <h5 class="card-title">Defaulted</h5>
+          <h2>{{ defaulted_invoices.count }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-white bg-secondary clickable" data-toggle="collapse" data-target="#failedInvoices" aria-expanded="false" aria-controls="failedInvoices">
+        <div class="card-body text-center">
+          <h5 class="card-title">Failed</h5>
+          <h2>{{ failed_invoices.count }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Collapsible Lists -->
+  <div id="pendingInvoices" class="collapse" data-parent="#accordionInvoices">
+    <div class="card mb-3">
+      <div class="card-header bg-warning text-white">Pending Invoices</div>
+      <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+          <thead><tr><th>Invoice #</th><th>Customer</th><th>Agent</th><th>Amount</th></tr></thead>
+          <tbody>
+            {% for inv in pending_invoices %}
+            <tr>
+              <td>{{ inv.invoice_id }}</td>
+              <td>{{ inv.customer.full_name }}</td>
+              <td>{% if inv.agent %}{{ inv.agent.full_name }}{% else %}<span class="badge badge-secondary">Direct Sale</span>{% endif %}</td>
+              <td>{{ inv.amount_due }} TZS</td>
+            </tr>
+            {% empty %}<tr><td colspan="4" class="text-center text-muted">No pending invoices</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="paidInvoices" class="collapse" data-parent="#accordionInvoices">
+      <div class="card mb-3">
+        <div class="card-header bg-success text-white">Paid Invoices</div>
+        <div class="card-body p-0">
+          <table class="table table-striped mb-0">
+            <thead>
+              <tr>
+                <th>Invoice #</th>
+                <th>Customer</th>
+                <th>Agent</th>
+                <th>Invoice Amount</th>
+                <th>Paid Amount</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Last Payment</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for inv in paid_invoices %}
+              <tr>
+                <td>{{ inv.invoice_id }}</td>
+                <td>{{ inv.customer.full_name }}</td>
+                <td>
+                  {% if inv.agent %}
+                    {{ inv.agent.full_name }}
+                  {% else %}
+                    <span class="badge badge-secondary">Direct Sale</span>
+                  {% endif %}
+                </td>
+                <td>{{ inv.amount_due }} TZS</td>
+                <td>
+                  {% if inv.payments.exists %}
+                    {{ inv.total_paid }} TZS
+                  {% else %}
+                    0 TZS
+                  {% endif %}
+                </td>
+                <td>{{ inv.status }}</td>
+                <td>{{ inv.created_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                  {% if inv.payments.last %}
+                    {{ inv.payments.last.created_at|date:"Y-m-d H:i" }}
+                  {% else %}
+                    No payments yet
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="8" class="text-center text-muted">No paid invoices</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  <div id="partialInvoices" class="collapse" data-parent="#accordionInvoices">
+      <div class="card mb-3">
+        <div class="card-header bg-info text-white">Partially Paid Invoices</div>
+        <div class="card-body p-0">
+          <table class="table table-striped mb-0">
+            <thead>
+              <tr>
+                <th>Invoice #</th>
+                <th>Customer</th>
+                <th>Agent</th>
+                <th>Invoice Amount</th>
+                <th>Paid Amount</th>
+                <th>Balance Remaining</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Last Payment</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for inv in partial_invoices %}
+              <tr>
+                <td>{{ inv.invoice_id }}</td>
+                <td>{{ inv.customer.full_name }}</td>
+                <td>
+                  {% if inv.agent %}
+                    {{ inv.agent.full_name }}
+                  {% else %}
+                    <span class="badge badge-secondary">Direct Sale</span>
+                  {% endif %}
+                </td>
+                <td>{{ inv.amount_due }} TZS</td>
+                <td>
+                  {% if inv.payments.exists %}
+                    {{ inv.payments.aggregate_total_paid }} TZS
+                  {% else %}
+                    0 TZS
+                  {% endif %}
+                </td>
+                <td>{{ inv.balance_remaining }} TZS</td>
+                <td>{{ inv.status }}</td>
+                <td>{{ inv.created_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                  {% if inv.payments.last %}
+                    {{ inv.payments.last.created_at|date:"Y-m-d H:i" }}
+                  {% else %}
+                    No payments yet
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="9" class="text-center text-muted">No partial invoices</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+  <div id="overdueInvoices" class="collapse" data-parent="#accordionInvoices">
+    <div class="card mb-3">
+      <div class="card-header bg-danger text-white">Overdue Invoices</div>
+      <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+          <thead><tr><th>Invoice #</th><th>Customer</th><th>Agent</th><th>Amount</th></tr></thead>
+          <tbody>
+            {% for inv in overdue_invoices %}
+            <tr>
+              <td>{{ inv.invoice_id }}</td>
+              <td>{{ inv.customer.full_name }}</td>
+              <td>{% if inv.agent %}{{ inv.agent.full_name }}{% else %}<span class="badge badge-secondary">Direct Sale</span>{% endif %}</td>
+              <td>{{ inv.amount_due }} TZS</td>
+            </tr>
+            {% empty %}<tr><td colspan="4" class="text-center text-muted">No overdue invoices</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="defaultedInvoices" class="collapse" data-parent="#accordionInvoices">
+    <div class="card mb-3">
+      <div class="card-header bg-dark text-white">Defaulted Invoices</div>
+      <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+          <thead><tr><th>Invoice #</th><th>Customer</th><th>Agent</th><th>Amount</th></tr></thead>
+          <tbody>
+            {% for inv in defaulted_invoices %}
+            <tr>
+              <td>{{ inv.invoice_id }}</td>
+              <td>{{ inv.customer.full_name }}</td>
+              <td>{% if inv.agent %}{{ inv.agent.full_name }}{% else %}<span class="badge badge-secondary">Direct Sale</span>{% endif %}</td>
+              <td>{{ inv.amount_due }} TZS</td>
+            </tr>
+            {% empty %}<tr><td colspan="4" class="text-center text-muted">No defaulted invoices</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+    <div id="failedInvoices" class="collapse" data-parent="#accordionInvoices">
+        <div class="card mb-3">
+          <div class="card-header bg-secondary text-white">Failed Invoices</div>
+          <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+              <thead>
+                <tr>
+                  <th>Invoice #</th>
+                  <th>Customer</th>
+                  <th>Agent</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for inv in failed_invoices %}
+                <tr>
+                  <td>{{ inv.invoice_id }}</td>
+                  <td>{{ inv.customer.full_name }}</td>
+                  <td>
+                    {% if inv.agent %}
+                      {{ inv.agent.full_name }}
+                    {% else %}
+                      <span class="badge badge-secondary">Direct Sale</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ inv.amount_due }} TZS</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="4" class="text-center text-muted">No failed invoices</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+{% endblock %}

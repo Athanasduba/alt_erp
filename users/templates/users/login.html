@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ALTERNATIVE ERP - Login</title>
+
+  <!-- Bootstrap 4.6 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+  <!-- Custom Login CSS -->
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+<div class="container-fluid vh-100 d-flex p-0">
+  <!-- Left side: Ads + Video Carousel -->
+  <div class="col-md-7 d-none d-md-block advert-placeholder">
+    <div id="companyCarousel" class="carousel slide carousel-fade h-100" data-ride="carousel">
+      <div class="carousel-inner h-100">
+        <!-- Slide 1 -->
+        <div class="carousel-item active peel-slide" data-interval="2000">
+          <img src="{% static 'img/img1.png' %}" class="advert-media" alt="img1">
+          <div class="carousel-caption peel-caption">
+            <h5>Smart Leasing Solutions</h5>
+            <p>Powered by ALTERNATIVE ERP</p>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-item peel-slide" data-interval="2000">
+          <img src="{% static 'img/img2.png' %}" class="advert-media" alt="img2">
+          <div class="carousel-caption peel-caption">
+            <h5>Seamless Payments</h5>
+            <p>M-PESA, MIX BY YAS, AirtelMoney, HaloPesa</p>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="carousel-item peel-slide" data-interval="2000">
+          <img src="{% static 'img/img3.png' %}" class="advert-media" alt="img3">
+          <div class="carousel-caption peel-caption">
+            <h5>Efficiency in Motion</h5>
+            <p>Always Choose us</p>
+          </div>
+        </div>
+
+        <!-- Slide 4 (Video) -->
+        <div class="carousel-item peel-slide" data-interval="3000">
+          <video autoplay muted loop class="advert-media">
+            <source src="{% static 'video/company_promo.mp4' %}" type="video/mp4">
+          </video>
+          <div class="carousel-caption peel-caption">
+            <h5>Dynamic Performance</h5>
+            <p>Experience ALTERNATIVE ERP</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <a class="carousel-control-prev" href="#companyCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </a>
+      <a class="carousel-control-next" href="#companyCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </a>
+
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#companyCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#companyCarousel" data-slide-to="1"></li>
+        <li data-target="#companyCarousel" data-slide-to="2"></li>
+        <li data-target="#companyCarousel" data-slide-to="3"></li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Right side: Login -->
+  <div class="col-md-5 col-12 login-placeholder">
+    <div class="card login-card shadow-lg p-5">
+      <div class="text-center mb-4">
+        <img src="{% static 'img/logo.png' %}" alt="Company Logo" class="mb-2 company-logo">
+        <h4 class="fw-bold app-name">ALTERNATIVE ERP</h4>
+      </div>
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" name="username" id="username" class="form-control form-control-lg" required>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" name="password" id="password" class="form-control form-control-lg" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg w-100">Login</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- jQuery (required for Bootstrap 4) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<!-- Bootstrap 4.6 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Carousel Loop Script -->
+<script>
+  $('#companyCarousel').carousel({
+    interval: 2000,   // default interval
+    wrap: true,
+    pause: false      // keep sliding even on hover
+  });
+</script>
+</body>
+</html>

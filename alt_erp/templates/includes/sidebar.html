@@ -1,0 +1,403 @@
+{% load static %}
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <!-- Brand Logo -->
+  <a href="{% url 'dashboard_home' %}" class="brand-link">
+    <img src="{% static 'img/logo.png' %}" 
+         alt="ERP Logo" 
+         class="brand-image img-circle elevation-3" 
+         style="opacity:.9; width:40px; height:40px;">
+    <span class="brand-text font-weight-light">Alternative ERP</span>
+  </a>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+
+        <!-- Dashboard -->
+        <li class="nav-item">
+          <a href="{% url 'dashboard_home' %}" class="nav-link">
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>Dashboard</p>
+          </a>
+        </li>
+
+        <!-- 1. User Management -->
+        <li class="nav-item">
+          <a href="{% url 'user_management' %}" class="nav-link">
+            <i class="nav-icon fas fa-user-cog"></i>
+            <p>User Management</p>
+          </a>
+        </li>
+
+        <!-- 2. Customers -->
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-users"></i>
+            <p>
+              Customers
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'customer_list' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Customer List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'customer_onboarding' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Customer</p>
+              </a>
+            </li>
+            {% if is_admin or is_manager %}
+            <li class="nav-item">
+              <a href="{% url 'manager_dashboard' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Approvals</p>
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </li>
+
+        <!-- 3. Warehouses -->
+        <li class="nav-item">
+          <a href="{% url 'warehouse_list' %}" class="nav-link">
+            <i class="nav-icon fas fa-warehouse"></i>
+            <p>Warehouses</p>
+          </a>
+        </li>
+
+        <!-- 4. Motorcycles -->
+        <li class="nav-item">
+          <a href="{% url 'motorcycle_list' %}" class="nav-link">
+            <i class="nav-icon fas fa-motorcycle"></i>
+            <p>Motorcycles</p>
+          </a>
+        </li>
+
+        <!-- 5. Agents -->
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-user-tie"></i>
+            <p>
+              Agents
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'agent_dashboard' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Agent Dashboard</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'agent_list' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Agent List</p>
+              </a>
+            </li>
+            {% if is_admin or is_manager %}
+            <li class="nav-item">
+              <a href="{% url 'agent_create' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Agent</p>
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </li>
+
+        <!-- 7. Invoices -->
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-file-invoice-dollar"></i>
+            <p>
+              Invoices
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'invoice_dashboard' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Invoice Dashboard</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'successful_invoices' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Successful Invoices</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'failed_invoices' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Failed Invoices</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'invoice_list' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Invoice List</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- 8. Payments -->
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-money-check-alt"></i>
+            <p>
+              Payments
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'payment_dashboard' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Payment Dashboard</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'successful_payments' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Successful Payments</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'failed_payments' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Failed Payments</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'payment_list' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Payment List</p>
+              </a>
+            </li>
+        
+            {% if is_admin or is_manager %}
+            <li class="nav-item">
+                {% if failed_payment %}
+                    <a href="{% url 'create_payment' payment_id=failed_payment.id %}" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Re-Apply Payment</p>
+                    </a>
+                {% else %}
+                    <span class="nav-link text-muted">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>No Failed Payments</p>
+                    </span>
+                {% endif %}
+            </li>
+        {% endif %}
+
+
+            {% if is_admin %}
+            <li class="nav-item">
+              <a href="{% url 'payment_logs' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Payment Logs</p>
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </li>
+
+
+
+        <!-- 9. Accounting -->
+        <li class="nav-item has-treeview">
+          <a href="{% url 'accounting_dashboard' %}" class="nav-link">
+            <i class="nav-icon fas fa-calculator"></i>
+            <p>
+              Accounting
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <!-- Dashboard -->
+            <li class="nav-item">
+              <a href="{% url 'accounting_dashboard' %}" class="nav-link">
+                <i class="fas fa-tachometer-alt nav-icon"></i>
+                <p>Dashboard</p>
+              </a>
+            </li>
+
+            <!-- Ledger Entries -->
+            <li class="nav-item">
+              <a href="{% url 'ledger_entries' %}" class="nav-link">
+                <i class="fas fa-book nav-icon"></i>
+                <p>Ledger Entries</p>
+              </a>
+            </li>
+
+            <!-- Agent Commission -->
+            <li class="nav-item">
+              <a href="{% url 'agent_commission' %}" class="nav-link">
+                <i class="fas fa-user-tie nav-icon"></i>
+                <p>Agent Commission</p>
+              </a>
+            </li>
+
+            <!-- Commission Payout -->
+            <li class="nav-item">
+              <a href="{% url 'commission_payout' %}" class="nav-link">
+                <i class="fas fa-money-check-alt nav-icon"></i>
+                <p>Pay Commission</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+
+        <!-- 10. Report Section -->
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-chart-pie"></i>
+            <p>
+              Reports
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+
+            <!-- Customer Reports -->
+            <li class="nav-item">
+              <a href="{% url 'customer_settlement_report' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Customer Settlement</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'customer_arrears_aging_report' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Customer Arrears Aging</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'customer_aggregation_report' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Customer Aggregation</p>
+              </a>
+            </li>
+
+            <!-- Agent Reports -->
+            <li class="nav-item">
+              <a href="{% url 'agent_commission_report' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Agent Commissions</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'agent_performance_report' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Agent Performance</p>
+              </a>
+            </li>
+
+            <!-- Invoices -->
+            <li class="nav-item">
+              <a href="{% url 'invoice_aging_report' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Invoice Aging</p>
+              </a>
+            </li>
+
+            <!-- Payments -->
+            <li class="nav-item">
+              <a href="{% url 'payment_reconciliation_report' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Payment Reconciliation</p>
+              </a>
+            </li>
+
+            <!-- Accounting -->
+            <li class="nav-item">
+              <a href="{% url 'ledger_report' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Ledger Report</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'credit_vs_arrears_report' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Credit vs Arrears</p>
+              </a>
+            </li>
+
+            <!-- Motorcycles -->
+            <li class="nav-item">
+              <a href="{% url 'motorcycle_movement_report' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Motorcycle Movement</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'motorcycle_statement_report' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Motorcycle Statement</p>
+              </a>
+            </li>
+
+            <!-- New Reports -->
+            <li class="nav-item">
+              <a href="{% url 'outstanding_report' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Outstanding Report</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'collection_report' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Collection Report</p>
+              </a>
+            </li>
+
+          </ul>
+        </li>
+
+
+        
+
+
+        <!-- 🔄 System Logs -->
+        {% if is_admin or is_manager or is_officer %}
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-bell"></i>
+            <p>
+              System Logs
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'monitoring_dashboard' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Monitoring Dashboard</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'notifications_list' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Notification Logs</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        {% endif %}
+
+      </ul>
+    </nav>
+  </div>
+</aside>

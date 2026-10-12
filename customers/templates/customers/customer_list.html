@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block title %}Customer List{% endblock %}
+{% block page_header %}Customer List{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-3">
+  <div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+      <h5 class="mb-0">All Customers</h5>
+      <a href="{% url 'customer_onboarding' %}" class="btn btn-dark btn-sm">
+        <i class="bi bi-person-plus"></i> Add Customer
+      </a>
+    </div>
+
+    <div class="card-body">
+
+      <!-- 🔎 Filter Form -->
+      <form method="get" class="row g-3 mb-3 align-items-end">
+        <!-- Customer name -->
+        <div class="col-md-3">
+          <input type="text" name="search_name" class="form-control"
+                 placeholder="Search by name" value="{{ request.GET.search_name }}">
+        </div>
+
+        <!-- Approval status -->
+        <div class="col-md-2">
+          <select name="approval_status" class="form-select">
+            <option value="">Approval Status</option>
+            <option value="PENDING" {% if request.GET.approval_status == "PENDING" %}selected{% endif %}>Pending</option>
+            <option value="APPROVED" {% if request.GET.approval_status == "APPROVED" %}selected{% endif %}>Approved</option>
+            <option value="REJECTED" {% if request.GET.approval_status == "REJECTED" %}selected{% endif %}>Rejected</option>
+          </select>
+        </div>
+
+        <!-- Agent name -->
+        <div class="col-md-2">
+          <input type="text" name="agent_name" class="form-control"
+                 placeholder="Agent name / company / username" value="{{ request.GET.agent_name }}">
+        </div>
+
+        <!-- Warehouse dropdown -->
+        <div class="col-md-2">
+          <select name="warehouse_id" class="form-select">
+            <option value="">Nearest Warehouse</option>
+            {% for warehouse in warehouses %}
+              <option value="{{ warehouse.id }}" {% if request.GET.warehouse_id == warehouse.id|stringformat:"s" %}selected{% endif %}>
+                {{ warehouse.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Officer dropdown -->
+        <div class="col-md-2">
+          <select name="officer_name" class="form-select">
+            <option value="">Officer in charge</option>
+            {% for officer in officers %}
+              <option value="{{ officer.id }}" {% if request.GET.officer_name == officer.id|stringformat:"s" %}selected{% endif %}>
+                {{ officer.full_name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Credit min -->
+        <div class="col-md-2">
+          <input type="number" name="credit_min" class="form-control"
+                 placeholder="Min Credit" value="{{ request.GET.credit_min }}">
+        </div>
+
+        <!-- Arrears min -->
+        <div class="col-md-2">
+          <input type="number" name="arrears_min" class="form-control"
+                 placeholder="Min Arrears" value="{{ request.GET.arrears_min }}">
+        </div>
+
+        <!-- Date range -->
+        <div class="col-md-2">
+          <input type="date" name="start_date" class="form-control"
+                 value="{{ request.GET.start_date }}">
+        </div>
+        <div class="col-md-2">
+          <input type="date" name="end_date" class="form-control"
+                 value="{{ request.GET.end_date }}">
+        </div>
+
+        <!-- Buttons -->
+        <div class="col-md-1">
+          <button type="submit" class="btn btn-secondary w-100">Filter</button>
+        </div>
+        <div class="col-md-1">
+          <a href="{% url 'customer_list' %}" class="btn btn-outline-danger w-100">Clear</a>
+        </div>
+      </form>
+
+      {% if customers %}
+        <!-- ✅ Responsive Table -->
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Name (Mobile)</th>
+                <th>Customer ID</th>
+                <th>Account Number</th>
+                <th>Payment Model</th>
+                <th>Approval Status</th>
+                <th>Motorcycle VIN</th>
+                <th>Agent</th>
+                <th>Commission %</th>
+                <th>Commission Preview</th>
+                <th>Balance Remaining</th>
+                <th>Credits</th>
+                <th>Arrears</th>
+                <th>Settled?</th>
+                <th>Repossession Flag</th>
+                <th>Contract</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for customer in customers %}
+              <tr>
+                <td style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                  <a href="{% url 'customer_detail' customer.pk %}" class="text-decoration-none">
+                    {{ customer.full_name }} ({{ customer.mobile_number }})
+                  </a>
+                </td>
+                <td>{{ customer.customer_id }}</td>
+                <td>{{ customer.account_number }}</td>
+                <td><span class="badge bg-success">{{ customer.payment_model }}</span></td>
+                <td>
+                  {% if customer.approval_status == "APPROVED" %}
+                    <span class="badge bg-success">Approved</span>
+                  {% elif customer.approval_status == "REJECTED" %}
+                    <span class="badge bg-danger">Rejected</span>
+                  {% else %}
+                    <span class="badge bg-secondary">Pending</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if customer.motorcycle %}
+                    {{ customer.motorcycle.vin }}
+                  {% else %}
+                    <span class="text-muted">—</span>
+                  {% endif %}
+                </td>
+                <td>{{ customer.agent }}</td>
+                <td>{{ customer.agent_commission_percent }}%</td>
+                <td>
+                  {% if customer.commission_preview.formatted %}
+                    {{ customer.commission_preview.formatted }}
+                  {% else %}
+                    <span class="text-muted">—</span>
+                  {% endif %}
+                </td>
+                <td>{{ customer.balance_remaining }}</td>
+                <td>{{ customer.credit_amount }}</td>
+                <td>{{ customer.arrears_amount }}</td>
+                <!-- ✅ Use property instead of raw field -->
+                <td>
+                  {% if customer.is_settled %}
+                    ✅
+                  {% else %}
+                    ❌
+                  {% endif %}
+                </td>
+                <td>{% if customer.repossession_flag %}⚠️{% else %}—{% endif %}</td>
+                <td>
+                  {% if customer.contract %}
+                    <a href="{{ customer.contract.url }}" target="_blank" class="btn btn-outline-info btn-sm">
+                      <i class="bi bi-file-earmark-pdf"></i> Preview
+                    </a>
+                  {% else %}
+                    <span class="text-muted">No Contract</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="text-muted">No customers found.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Pagination Controls -->
+<div class="d-flex justify-content-center mt-3">
+  <nav aria-label="Customer pagination">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link"
+             href="?page={{ page_obj.previous_page_number }}&{{ request.GET.urlencode }}">
+            Previous
+          </a>
+        </li>
+      {% endif %}
+
+      <li class="page-item disabled">
+        <span class="page-link">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+      </li>
+
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link"
+             href="?page={{ page_obj.next_page_number }}&{{ request.GET.urlencode }}">
+            Next
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <h2 class="mb-4 text-center">Agent Dashboard</h2>
+
+    <!-- Time Range Filter -->
+    <form method="get" class="row g-3 mb-3 align-items-end justify-content-center">
+        <div class="col-md-3">
+            <input type="date" name="start_date" class="form-control" value="{{ start_date }}">
+        </div>
+        <div class="col-md-3">
+            <input type="date" name="end_date" class="form-control" value="{{ end_date }}">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </form>
+
+    <!-- Monthly Trend Chart -->
+    <div class="card mb-4 mx-auto" style="max-width: 1000px;">
+        <div class="card-header bg-dark text-white text-center">
+            Monthly Customer Onboarding Trend
+        </div>
+        <div class="card-body">
+            <canvas id="onboardingChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Agent Table -->
+    <div class="table-responsive mb-4">
+        <table class="table table-sm table-striped table-bordered text-center align-middle">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Display Name</th>
+                    <th>Type</th>
+                    <th>Warehouse</th>
+                    <th>Supervisor</th>
+                    <th>Customers</th>
+                    <th>Motos (ascending)</th>
+                    <th>Arrears</th>
+                    <th>Payments</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for agent in agents %}
+                <tr>
+                    <td class="text-truncate" style="max-width:120px;">{{ agent.display_name }}</td>
+                    <td>{{ agent.agent_type }}</td>
+                    <td class="text-truncate" style="max-width:100px;">{{ agent.warehouse }}</td>
+                    <td class="text-truncate" style="max-width:100px;">{{ agent.supervisor }}</td>
+                    <td>{{ agent.customer_count }}</td>
+                    <td><strong>{{ agent.motorcycle_count }}</strong></td>
+                    <td>{{ agent.arrears_total|default:0|floatformat:0 }}</td>
+                    <td>{{ agent.payments_total|default:0|floatformat:0 }}</td>
+                    <td>{{ agent.created_on|date:"Y-%m-%d" }}</td>
+                    <td>
+                        <a href="{% url 'agent_detail' agent.pk %}" class="btn btn-sm btn-info">View</a>
+                        <a href="{% url 'agent_update' agent.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{% url 'agent_delete' agent.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="10" class="text-center">No agents found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Agent Ranking List Below Table -->
+    <div class="card mx-auto" style="max-width: 800px;">
+        <div class="card-header bg-secondary text-white text-center">
+            Agent Ranking (by motorcycles sold, ascending)
+        </div>
+        <div class="card-body">
+            <ol class="list-group list-group-numbered">
+                {% for agent in agents %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ agent.display_name }} ({{ agent.agent_type }})
+                    <span class="badge bg-primary rounded-pill">{{ agent.motorcycle_count }}</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">No agents available.</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const ctx = document.getElementById('onboardingChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ months|safe }},
+            datasets: [{
+                label: 'Customers Onboarded',
+                data: {{ monthly_counts|safe }},
+                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: true } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+});
+</script>
+{% endblock %}

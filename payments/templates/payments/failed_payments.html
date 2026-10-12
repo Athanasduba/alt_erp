@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Failed Payments</h2>
+
+    <!-- ✅ Flash messages -->
+    {% if messages %}
+    <div class="mt-2">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <table class="table table-bordered table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Customer</th>
+                <th>Motorcycle VIN</th>
+                <th>Company Number</th>
+                <th>Reference VIN</th>
+                <th>Invoice Amount</th>
+                <th>Amount Paid</th>
+                <th>Reason</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in payments %}
+            <tr>
+                <td>{{ p.transaction_id }}</td>
+                <td>{% if p.customer %}{{ p.customer.full_name }}{% else %}Unknown Customer{% endif %}</td>
+                <td>{% if p.motorcycle %}{{ p.motorcycle.vin }}{% else %}No VIN{% endif %}</td>
+                <td>{% if p.company_number %}{{ p.company_number }}{% else %}No Company Number{% endif %}</td>
+                <td>{% if p.reference_vin %}{{ p.reference_vin }}{% else %}No Reference VIN{% endif %}</td>
+                <td>{{ p.invoice_amount|default:"0" }}</td>
+                <td>{{ p.amount_paid|default:"0" }}</td>
+                <td>{% if p.reason %}{{ p.reason }}{% else %}Not Provided{% endif %}</td>
+                <td>{{ p.timestamp|default:"N/A" }}</td>
+                <td>
+                    {% if user.is_admin or user.is_manager or user.is_officer %}
+                        <a href="{% url 'regenerate_payment' p.id %}" class="btn btn-sm btn-primary">Re-generate</a>
+                    {% else %}
+                        <span class="text-muted">No actions</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="10">No failed payments found</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Create Notification (Manual)</h2>
+    <form method="post" action="{% url 'notifications:create_notification' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Role</label>
+            <select name="role" class="form-control">
+                <option value="CUSTOMER">Customer</option>
+                <option value="AGENT">Agent</option>
+                <option value="OFFICER">Officer</option>
+                <option value="ACCOUNTANT">Accountant</option>
+                <option value="MANAGER">Manager</option>
+                <option value="ADMIN">Admin</option>
+                <option value="SYSTEM">System (Batch Summary)</option> <!-- ✅ new option -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Customer Name</label>
+            <input type="text" name="customer_name" class="form-control" placeholder="Optional for SYSTEM role">
+        </div>
+        <div class="form-group">
+            <label>Motorcycle VIN</label>
+            <input type="text" name="motorcycle_vin" class="form-control" placeholder="Optional for SYSTEM role">
+        </div>
+        <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" name="phone_number" class="form-control" placeholder="Optional for SYSTEM role">
+        </div>
+        <div class="form-group">
+            <label>Message</label>
+            <textarea name="message" class="form-control" placeholder="Enter SMS content or batch summary"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Status</label>
+            <select name="status" class="form-control">
+                <option value="SENT">SENT</option>
+                <option value="FAILED">FAILED</option>
+                <option value="PENDING">PENDING</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+{% endblock %}

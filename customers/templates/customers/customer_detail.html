@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% block title %}Customer Details{% endblock %}
+{% block page_header %}Customer Details{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+
+  <!-- Success / Error Messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Customer Core Info -->
+  <div class="card mb-3 shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">{{ customer.full_name }} <small class="text-light">({{ customer.account_number }})</small></h5>
+    </div>
+    <div class="card-body">
+      <table class="table table-sm">
+        <tr><th>Customer ID</th><td>{{ customer.customer_id }}</td></tr>
+        <tr><th>National ID</th><td>{{ customer.national_id }}</td></tr>
+        <tr><th>Mobile</th><td>{{ customer.mobile_number }}</td></tr>
+        <tr><th>Payment Model</th><td><span class="badge bg-success">{{ customer.payment_model }}</span></td></tr>
+        <tr><th>Agent</th><td>{{ customer.agent }}</td></tr>
+        <tr><th>Approval Status</th>
+            <td>
+              {% if customer.approval_status == "APPROVED" %}
+                <span class="badge bg-success">Approved</span>
+              {% elif customer.approval_status == "REJECTED" %}
+                <span class="badge bg-danger">Rejected</span>
+              {% else %}
+                <span class="badge bg-secondary">Pending</span>
+              {% endif %}
+            </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Contract Preview -->
+  {% if customer.contract %}
+  <div class="card mb-3 shadow-sm">
+    <div class="card-header bg-dark text-white">Customer Contract</div>
+    <div class="card-body">
+      <a href="{{ customer.contract.url }}" target="_blank" class="btn btn-outline-info btn-sm">
+        <i class="bi bi-file-earmark-pdf"></i> View Contract (PDF)
+      </a>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Guarantor 1 -->
+  <div class="card mb-3 shadow-sm">
+    <div class="card-header bg-warning">
+      <h6 class="mb-0">Guarantor 1</h6>
+    </div>
+    <div class="card-body">
+      <table class="table table-sm">
+        <tr><th>Name</th><td>{{ customer.guarantor1_name }}</td></tr>
+        <tr><th>Mobile</th><td>{{ customer.guarantor1_mobile }}</td></tr>
+        <tr><th>Address</th><td>{{ customer.guarantor1_address }}</td></tr>
+        <tr><th>National ID</th><td>{{ customer.guarantor1_national_id }}</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Guarantor 2 -->
+  <div class="card mb-3 shadow-sm">
+    <div class="card-header bg-warning">
+      <h6 class="mb-0">Guarantor 2</h6>
+    </div>
+    <div class="card-body">
+      <table class="table table-sm">
+        <tr><th>Name</th><td>{{ customer.guarantor2_name }}</td></tr>
+        <tr><th>Mobile</th><td>{{ customer.guarantor2_mobile }}</td></tr>
+        <tr><th>Address</th><td>{{ customer.guarantor2_address }}</td></tr>
+        <tr><th>National ID</th><td>{{ customer.guarantor2_national_id }}</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Financial Tracking -->
+  <div class="card mb-3 shadow-sm">
+    <div class="card-header bg-light">
+      <h6 class="mb-0">Financial Tracking</h6>
+    </div>
+    <div class="card-body">
+      <table class="table table-sm">
+        <tr><th>Opening Balance</th><td>{{ customer.opening_balance }}</td></tr>
+        <tr><th>Balance Remaining</th><td>{{ customer.balance_remaining }}</td></tr>
+        <tr><th>Credits</th><td>{{ customer.credit_amount }}</td></tr>
+        <tr><th>Arrears</th><td>{{ customer.arrears_amount }}</td></tr>
+        <tr><th>Settled</th><td>{% if customer.is_settled %}✅ Yes{% else %}❌ No{% endif %}</td></tr>
+        <tr><th>Missed Invoices</th><td>{{ customer.missed_invoices_count }}</td></tr>
+        <tr><th>Repossession Flag</th><td>{% if customer.repossession_flag %}⚠️ Active{% else %}—{% endif %}</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Agent Commission -->
+  {% if commission_info %}
+  <div class="card mb-3 shadow-sm">
+    <div class="card-header bg-warning">
+      <h6 class="mb-0">Agent Commission</h6>
+    </div>
+    <div class="card-body">
+      <table class="table table-sm">
+        <tr><th>Commission Percent</th><td>{{ customer.agent_commission_percent }}%</td></tr>
+        {% if commission_info.cash_commission %}
+          <tr><th>Cash Commission</th><td>{{ commission_info.cash_commission }}</td></tr>
+        {% endif %}
+        {% if commission_info.installment_commission %}
+          <tr><th>Per Installment Commission</th><td>{{ commission_info.installment_commission }}</td></tr>
+        {% endif %}
+        {% if commission_info.lease_commission %}
+          <tr><th>Per Weekly Lease Commission</th><td>{{ commission_info.lease_commission }}</td></tr>
+        {% endif %}
+        {% if customer.payment_model == "INSTALLMENT" %}
+          <tr><th>Per Initial Deposit Commission</th><td>{{ customer.per_initial_deposit_commission|floatformat:2 }}</td></tr>
+        {% endif %}
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Installment Plan -->
+  {% if installment_plan %}
+  <div class="card mb-3 shadow-sm">
+    <div class="card-header bg-info text-white">
+      <h6 class="mb-0">Installment Plan</h6>
+    </div>
+    <div class="card-body">
+      <table class="table table-sm">
+        <tr><th>Total Amount</th><td>{{ installment_plan.total_amount }}</td></tr>
+        <tr><th>Initial Deposit</th><td>{{ installment_plan.initial_deposit }}</td></tr>
+        <tr><th>Number of Installments</th><td>{{ installment_plan.number_of_installments }}</td></tr>
+        <tr><th>Installment Amount</th><td>{{ installment_plan.installment_amount }}</td></tr>
+        <tr><th>Start Date</th><td>{{ installment_plan.start_date }}</td></tr>
+        <tr><th>End Date</th><td>{{ installment_plan.end_date }}</td></tr>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Lease Plan -->
+  {% if lease_plan %}
+  <div class="card mb-3 shadow-sm">
+    <div class="card-header bg-secondary text-white">
+      <h6 class="mb-0">Lease Plan</h6>
+    </div>
+    <div class="card-body">
+      <table class="table table-sm">
+        <tr><th>Total Amount</th><td>{{ lease_plan.total_amount }}</td></tr>
+        <tr><th>Weekly Lease Amount</th><td>{{ lease_plan.weekly_lease_amount }}</td></tr>
+        <tr><th>Lease Period (Weeks)</th><td>{{ lease_plan.lease_period_weeks }}</td></tr>
+        <tr><th>Start Date</th><td>{{ lease_plan.start_date }}</td></tr>
+        <tr><th>End Date</th><td>{{ lease_plan.end_date }}</td></tr>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+    <!-- Approval Actions (Admins/Managers only) -->
+  {% if request.user.role in "ADMIN,MANAGER" %}
+  <div class="card mb-3 shadow-sm">
+    <div class="card-header bg-light">
+      <h6 class="mb-0">Approval Actions</h6>
+    </div>
+    <div class="card-body">
+      <form method="post" action="{% url 'update_customer_status' customer.id 'APPROVED' %}" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success btn-sm">
+          <i class="bi bi-check-circle"></i> Approve
+        </button>
+      </form>
+
+      <form method="post" action="{% url 'update_customer_status' customer.id 'REJECTED' %}" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn-sm">
+          <i class="bi bi-x-circle"></i> Reject
+        </button>
+      </form>
+
+      <form method="post" action="{% url 'update_customer_status' customer.id 'PENDING' %}" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary btn-sm">
+          <i class="bi bi-arrow-repeat"></i> Return for Correction
+        </button>
+      </form>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+

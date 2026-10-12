@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block title %}Manager Dashboard{% endblock %}
+{% block page_header %}Manager Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+
+  <!-- Warehouse Stock Overview -->
+  <div class="card mb-4">
+    <div class="card-header bg-dark text-white">
+      <h5 class="mb-0">Warehouse Stock Overview</h5>
+    </div>
+    <div class="card-body table-responsive">
+      <table class="table table-sm table-bordered table-striped">
+        <thead class="table-secondary">
+          <tr>
+            <th>Warehouse</th>
+            <th class="text-success">Available</th>
+            <th class="text-primary">Leased</th>
+            <th class="text-secondary">Sold</th>
+            <th class="text-warning">Retained</th>
+            <th class="text-info">Re-Sold</th>
+            <th class="text-info">Re-Leased</th>
+            <th class="text-muted">Lease Completed</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for data in warehouse_data %}
+          <tr>
+            <td>{{ data.warehouse.name }}</td>
+            <td class="text-success">{{ data.available }}</td>
+            <td class="text-primary">{{ data.leased }}</td>
+            <td class="text-secondary">{{ data.sold }}</td>
+            <td class="text-warning">{{ data.retained }}</td>
+            <td class="text-info">{{ data.resold }}</td>
+            <td class="text-info">{{ data.re_leased }}</td>
+            <td class="text-muted">{{ data.lease_completed }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="8">No warehouses found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Pending Customers -->
+  <div class="card mb-4">
+    <div class="card-header bg-warning">
+      <h5 class="mb-0">Pending Customers</h5>
+    </div>
+    <div class="card-body table-responsive">
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Customer ID</th>
+            <th>Account Number</th>
+            <th>Payment Model</th>
+            <th>Status</th>
+            <th>Agent</th>
+            <th>Commission %</th>
+            <th>Commission Preview</th>
+            <th>Contract</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for customer in pending_customers %}
+          <tr>
+            <td>{{ customer.full_name }}</td>
+            <td>{{ customer.customer_id }}</td>
+            <td>{{ customer.account_number }}</td>
+            <td>{{ customer.payment_model }}</td>
+            <td>{{ customer.approval_status }}</td>
+            <td>{{ customer.agent }}</td>
+            <td>{{ customer.agent_commission_percent }}%</td>
+            <td>
+              {% if customer.commission_preview.formatted %}
+                {% if customer.payment_model == 'CASH' %}
+                  <span class="badge bg-success">{{ customer.commission_preview.formatted }}</span>
+                {% elif customer.payment_model == 'INSTALLMENT' %}
+                  <span class="badge bg-primary">{{ customer.commission_preview.formatted }}</span>
+                {% elif customer.payment_model == 'LEASE' %}
+                  <span class="badge bg-warning text-dark">{{ customer.commission_preview.formatted }}</span>
+                {% endif %}
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if customer.contract %}
+                <a href="{{ customer.contract.url }}" target="_blank" class="btn btn-info btn-sm">Preview</a>
+              {% else %}
+                <span class="text-muted">No Contract</span>
+              {% endif %}
+            </td>
+            <td>
+              <form method="post" action="{% url 'update_customer_status' customer.id 'APPROVED' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+              </form>
+              <form method="post" action="{% url 'update_customer_status' customer.id 'REJECTED' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+              </form>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="10">No pending customers.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Approved Customers -->
+  <div class="card mb-4">
+    <div class="card-header bg-success text-white">
+      <h5 class="mb-0">Approved Customers</h5>
+    </div>
+    <div class="card-body table-responsive">
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Customer ID</th>
+            <th>Account Number</th>
+            <th>Payment Model</th>
+            <th>Status</th>
+            <th>Agent</th>
+            <th>Commission %</th>
+            <th>Commission Preview</th>
+            <th>Contract</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for customer in approved_customers %}
+          <tr>
+            <td>{{ customer.full_name }}</td>
+            <td>{{ customer.customer_id }}</td>
+            <td>{{ customer.account_number }}</td>
+            <td>{{ customer.payment_model }}</td>
+            <td>{{ customer.approval_status }}</td>
+            <td>{{ customer.agent }}</td>
+            <td>{{ customer.agent_commission_percent }}%</td>
+            <td>
+              {% if customer.commission_preview.formatted %}
+                {% if customer.payment_model == 'CASH' %}
+                  <span class="badge bg-success">{{ customer.commission_preview.formatted }}</span>
+                {% elif customer.payment_model == 'INSTALLMENT' %}
+                  <span class="badge bg-primary">{{ customer.commission_preview.formatted }}</span>
+                {% elif customer.payment_model == 'LEASE' %}
+                  <span class="badge bg-warning text-dark">{{ customer.commission_preview.formatted }}</span>
+                {% endif %}
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if customer.contract %}
+                <a href="{{ customer.contract.url }}" target="_blank" class="btn btn-info btn-sm">Preview</a>
+              {% else %}
+                <span class="text-muted">No Contract</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="9">No approved customers.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Rejected Customers -->
+  <div class="card mb-4">
+    <div class="card-header bg-danger text-white">
+      <h5 class="mb-0">Rejected Customers</h5>
+    </div>
+    <div class="card-body table-responsive">
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Customer ID</th>
+            <th>Account Number</th>
+            <th>Payment Model</th>
+            <th>Status</th>
+            <th>Agent</th>
+            <th>Commission %</th>
+            <th>Commission Preview</th>
+            <th>Contract</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for customer in rejected_customers %}
+          <tr>
+            <td>{{ customer.full_name }}</td>
+            <td>{{ customer.customer_id }}</td>
+            <td>{{ customer.account_number }}</td>
+            <td>{{ customer.payment_model }}</td>
+            <td>{{ customer.approval_status }}</td>
+            <td>{{ customer.agent }}</td>
+            <td>{{ customer.agent_commission_percent }}%</td>
+            <td>
+              {% if customer.commission_preview.formatted %}
+                {% if customer.payment_model == 'CASH' %}
+                  <span class="badge bg-success">{{ customer.commission_preview.formatted }}</span>
+                {% elif customer.payment_model == 'INSTALLMENT' %}
+                  <span class="badge bg-primary">{{ customer.commission_preview.formatted }}</span>
+                {% elif customer.payment_model == 'LEASE' %}
+                  <span class="badge bg-warning text-dark">{{ customer.commission_preview.formatted }}</span>
+                {% endif %}
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if customer.contract %}
+                <a href="{{ customer.contract.url }}" target="_blank" class="btn btn-info btn-sm">Preview</a>
+              {% else %}
+                <span class="text-muted">No Contract</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="9">No rejected customers.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Invoices{% endblock %}
+{% block page_header %}Invoices{% endblock %}
+{% block content %}
+<div class="card card-success">
+  <div class="card-header">
+    <h3 class="card-title">Invoices</h3>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered text-left">
+        <thead class="thead-light">
+          <tr>
+            <th>Invoice #</th>
+            <th>Customer</th>
+            <th>Agent</th>
+            <th>Motorcycle VIN</th>
+            <th>Amount Due</th>
+            <th>Status</th>
+            <th>Agent Commission</th>
+            <th>Payment Status</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for inv in invoices %}
+          <tr>
+            <td>{{ inv.invoice_id }}</td>
+            <td>{{ inv.customer.full_name }}</td>
+            <td>
+              {% if inv.agent %}
+                {{ inv.agent.full_name }}
+              {% else %}
+                Direct Sale
+              {% endif %}
+            </td>
+            <td>
+              {% if inv.motorcycle %}
+                {{ inv.motorcycle.vin }}
+              {% else %}
+                No motorcycle linked
+              {% endif %}
+            </td>
+            <td>{{ inv.amount_due }}</td>
+            <td>{{ inv.status }}</td>
+            <td>
+              {% if inv.agent %}
+                {{ inv.agent_commission }} TZS
+              {% else %}
+                0 TZS
+              {% endif %}
+            </td>
+            <td>
+              {% if inv.customer.is_settled or inv.customer.balance_remaining == 0 %}
+                <span class="badge badge-success">Settled</span>
+              {% else %}
+                <span class="badge badge-danger">
+                  Balance Remaining: {{ inv.customer.balance_remaining }} TZS
+                </span>
+              {% endif %}
+            </td>
+            <td>{{ inv.created_at|date:"Y-m-d H:i" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="9">No invoices found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}ERP Dashboard{% endblock %}
+{% block content %}
+
+<h2 class="mb-4 text-primary">ERP Dashboard</h2>
+
+<!-- KPI Cards -->
+<div class="row">
+  <div class="col-lg-2 col-6">
+    <div class="small-box bg-info">
+      <div class="inner">
+        <h3>{{ total_customers }}</h3>
+        <p>Total Customers</p>
+      </div>
+      <div class="icon"><i class="fas fa-users"></i></div>
+    </div>
+  </div>
+
+  <div class="col-lg-2 col-6">
+    <div class="small-box bg-success">
+      <div class="inner">
+        <h3>{{ settled_count }}</h3>
+        <p>Settled Customers</p>
+      </div>
+      <div class="icon"><i class="fas fa-check-circle"></i></div>
+    </div>
+  </div>
+
+  <div class="col-lg-2 col-6">
+    <div class="small-box bg-danger">
+      <div class="inner">
+        <h3>{{ unsettled_count }}</h3>
+        <p>Unsettled Customers</p>
+      </div>
+      <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
+    </div>
+  </div>
+
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-warning">
+      <div class="inner">
+        <h3>TSh {{ credits_summary.total_credit|intcomma }}</h3>
+        <p>Total Credit</p>
+      </div>
+      <div class="icon"><i class="fas fa-wallet"></i></div>
+    </div>
+  </div>
+
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-secondary">
+      <div class="inner">
+        <h3>TSh {{ arrears_summary.total_arrears|intcomma }}</h3>
+        <p>Total Arrears</p>
+      </div>
+      <div class="icon"><i class="fas fa-hand-holding-usd"></i></div>
+    </div>
+  </div>
+</div>
+
+<!-- Settled/Unsettled Customers Tables -->
+<div class="row mt-4">
+  <div class="col-md-6">
+    <div class="card card-success">
+      <div class="card-header"><h3 class="card-title">Settled Customers</h3></div>
+      <div class="card-body table-responsive p-0" style="max-height:300px; overflow-y:auto;">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr><th>Name</th><th>Mobile</th><th>Account #</th></tr>
+          </thead>
+          <tbody>
+            {% for c in settled_customers %}
+              <tr>
+                <td>{{ c.full_name }}</td>
+                <td>{{ c.mobile_number }}</td>
+                <td>{{ c.account_number }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="3">No settled customers found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card card-danger">
+      <div class="card-header"><h3 class="card-title">Unsettled Customers</h3></div>
+      <div class="card-body table-responsive p-0" style="max-height:300px; overflow-y:auto;">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr><th>Name</th><th>Mobile</th><th>Account #</th></tr>
+          </thead>
+          <tbody>
+            {% for c in unsettled_customers %}
+              <tr>
+                <td>{{ c.full_name }}</td>
+                <td>{{ c.mobile_number }}</td>
+                <td>{{ c.account_number }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="3">No unsettled customers found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Warehouse Stats -->
+<div class="row mt-4">
+  <div class="col-md-12">
+    <div class="card card-primary">
+      <div class="card-header"><h3 class="card-title">Warehouse Stats</h3></div>
+      <div class="card-body table-responsive p-0" style="max-height:300px; overflow-y:auto;">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr><th>Warehouse</th><th>Location</th><th>Status</th><th>Count</th></tr>
+          </thead>
+          <tbody>
+            {% for w in warehouse_motorcycle_stats %}
+              <tr>
+                <td>{{ w.warehouse__name }}</td>
+                <td>{{ w.warehouse__physical_location }}</td>
+                <td>{{ w.status }}</td>
+                <td>{{ w.count }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="4">No warehouse stats available.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mt-4">
+  <div class="col-md-6">
+    <div class="card card-success">
+      <div class="card-header"><h3 class="card-title">Invoice Status</h3></div>
+      <div class="card-body"><canvas id="invoiceChart"></canvas></div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card card-info">
+      <div class="card-header"><h3 class="card-title">Motorcycle Status</h3></div>
+      <div class="card-body"><canvas id="motorcycleChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const invoiceData = {
+    labels: [{% for inv in invoice_stats %}'{{ inv.status }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+    datasets: [{
+      data: [{% for inv in invoice_stats %}{{ inv.count }}{% if not forloop.last %},{% endif %}{% endfor %}],
+      backgroundColor: ['#28a745','#ffc107','#dc3545','#17a2b8']
+    }]
+  };
+  new Chart(document.getElementById('invoiceChart'), { type: 'pie', data: invoiceData });
+
+  const motorcycleData = {
+    labels: [{% for s in motorcycle_stats %}'{{ s.status }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+    datasets: [{
+      label: 'Motorcycles',
+      data: [{% for s in motorcycle_stats %}{{ s.count }}{% if not forloop.last %},{% endif %}{% endfor %}],
+      backgroundColor: '#007bff'
+    }]
+  };
+  new Chart(document.getElementById('motorcycleChart'), {
+    type: 'bar',
+    data: motorcycleData,
+    options: { scales: { y: { beginAtZero: true } } }
+  });
+</script>
+
+{% endblock %}

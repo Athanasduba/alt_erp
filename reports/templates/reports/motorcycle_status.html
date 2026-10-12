@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Motorcycle Status Report{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4 text-primary">Motorcycle Status Report</h2>
+  {% include "reports/_export_buttons.html" %}
+  <div class="card">
+    <div class="card-body table-responsive p-0">
+      <table class="table table-hover text-nowrap">
+        <thead><tr><th>Status</th><th>Count</th></tr></thead>
+        <tbody>
+          {% for s in motorcycle_stats %}
+            <tr><td>{{ s.status }}</td><td>{{ s.count }}</td></tr>
+          {% empty %}
+            <tr><td colspan="2">No motorcycles found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

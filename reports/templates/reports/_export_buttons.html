@@ -1,0 +1,28 @@
+<form method="get" class="form-inline mb-3">
+  <label for="start_date" class="mr-2">From:</label>
+  <input type="date" id="start_date" name="start_date"
+         value="{{ request.GET.start_date }}"
+         class="form-control form-control-sm mr-3">
+
+  <label for="end_date" class="mr-2">To:</label>
+  <input type="date" id="end_date" name="end_date"
+         value="{{ request.GET.end_date }}"
+         class="form-control form-control-sm mr-3">
+
+  <!-- ✅ Customer Name Search (only for customer aggregation report) -->
+  {% if report_type == "customer_aggregation" %}
+    <label for="search_name" class="mr-2">Customer:</label>
+    <input type="text" id="search_name" name="search_name"
+           value="{{ request.GET.search_name }}"
+           placeholder="Search by name"
+           class="form-control form-control-sm mr-3">
+  {% endif %}
+
+  <button type="submit" class="btn btn-primary btn-sm mr-2">Filter</button>
+
+  <a href="?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&format=excel{% if request.GET.search_name %}&search_name={{ request.GET.search_name }}{% endif %}"
+     class="btn btn-success btn-sm mr-2">Export to Excel</a>
+
+  <a href="?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&format=pdf{% if request.GET.search_name %}&search_name={{ request.GET.search_name }}{% endif %}"
+     class="btn btn-danger btn-sm">Export to PDF</a>
+</form>

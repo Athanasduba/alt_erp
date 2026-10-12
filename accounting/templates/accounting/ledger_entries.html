@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Ledger Entries{% endblock %}
+{% block page_header %}Ledger Entries{% endblock %}
+{% block content %}
+
+<div class="card card-primary">
+  <div class="card-header">
+    <h3 class="card-title">All Ledger Entries</h3>
+  </div>
+  <div class="card-body table-responsive p-0">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Customer</th>
+          <th>Motorcycle VIN</th>
+          <th>Invoice</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Description</th>
+          <th>Mobile</th>
+          <th>Transaction ID</th>
+          <th>Bank</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in ledger_entries %}
+          <tr>
+            <td>{{ entry.created_at|date:"Y-m-d H:i" }}</td>
+            <td>{{ entry.customer.full_name }}</td>
+            <td>{{ entry.motorcycle.vin }}</td>
+            <td>{{ entry.invoice.invoice_id }}</td>
+            <td>{{ entry.entry_type }}</td>
+            <td>{{ entry.amount }}</td>
+            <td>{{ entry.description }}</td>
+            <td>{{ entry.mobile_number }}</td>
+            <td>{{ entry.transaction_id }}</td>
+            <td>{{ entry.bank_account }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="10">No ledger entries found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

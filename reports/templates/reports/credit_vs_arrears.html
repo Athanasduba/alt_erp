@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Credit vs Arrears Report{% endblock %}
+{% block content %}
+<div class="container-fluid">
+
+  <!-- Header with search + totals -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-primary">Credit vs Arrears Report</h2>
+    <form method="get" class="row g-2">
+      <div class="col-md-4">
+        <input type="text" name="customer" value="{{ search_customer }}" class="form-control" placeholder="Search by Customer">
+      </div>
+      <div class="col-md-4">
+        <input type="text" name="vin" value="{{ search_vin }}" class="form-control" placeholder="Search by VIN">
+      </div>
+      <div class="col-md-4 d-grid">
+        <button type="submit" class="btn btn-primary">Filter</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Totals summary -->
+  <div class="mb-3">
+    <strong>Total Credit:</strong> {{ total_credit }} |
+    <strong>Total Arrears:</strong> {{ total_arrears }} |
+    <strong>Net Balance:</strong> {{ net_balance }}
+  </div>
+
+  {% include "reports/_export_buttons.html" %}
+  <div class="card">
+    <div class="card-body table-responsive p-0">
+      <table class="table table-hover text-nowrap">
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Motorcycle VIN</th>
+            <th>Credit Balance</th>
+            <th>Arrears Balance</th>
+            <th>Net Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for acc in accounts %}
+            <tr>
+              <td>{{ acc.customer.full_name }}</td>
+              <td>
+                {% if acc.motorcycle %}
+                  {{ acc.motorcycle.vin }}
+                {% else %}
+                  N/A
+                {% endif %}
+              </td>
+              <td>{{ acc.credit_balance }}</td>
+              <td>{{ acc.arrears_balance }}</td>
+              <td>{{ acc.net_balance }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5">No records found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

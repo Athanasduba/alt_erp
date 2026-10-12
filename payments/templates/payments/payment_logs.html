@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  {% if user.is_admin %}
+    <div class="container mt-4">
+      <h2 class="mb-4">Payment Logs</h2>
+
+      <!-- ✅ Search / Filter Bar -->
+      <form method="get" class="form-inline mb-3">
+        <div class="form-group mr-2">
+          <label for="vin" class="mr-2">VIN:</label>
+          <input type="text" name="vin" id="vin" class="form-control" value="{{ request.GET.vin }}">
+        </div>
+        <div class="form-group mr-2">
+          <label for="customer" class="mr-2">Customer:</label>
+          <input type="text" name="customer" id="customer" class="form-control" value="{{ request.GET.customer }}">
+        </div>
+        <div class="form-group mr-2">
+          <label for="from_date" class="mr-2">From:</label>
+          <input type="date" name="from_date" id="from_date" class="form-control" value="{{ request.GET.from_date }}">
+        </div>
+        <div class="form-group mr-2">
+          <label for="to_date" class="mr-2">To:</label>
+          <input type="date" name="to_date" id="to_date" class="form-control" value="{{ request.GET.to_date }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Filter</button>
+      </form>
+
+      <!-- ✅ Logs Table -->
+      <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th>Timestamp</th>
+            <th>Company</th>
+            <th>VIN</th>
+            <th>ERP Transaction</th>
+            <th>Selcom Transaction</th>
+            <th>Customer</th>
+            <th>Phone</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Reason</th>
+            <th>Payload</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in logs %}
+          <tr>
+            <td>{{ log.created_on }}</td>
+            <td>{{ log.company_number }}</td>
+            <td>{{ log.motorcycle_vin }}</td>
+            <td>{{ log.transaction_id }}</td>
+            <td>{{ log.selcom_transaction_id }}</td>
+            <td>{{ log.customer_name }}</td>
+            <td>{{ log.mobile_number }}</td>
+            <td>{{ log.amount }}</td>
+            <td>
+              {% if log.status == "SUCCESS" or log.status == "FULL" %}
+                <span class="text-success font-weight-bold">{{ log.status }}</span>
+              {% elif log.status == "FAILED" %}
+                <span class="text-danger font-weight-bold">{{ log.status }}</span>
+              {% elif log.status == "REGENERATED" %}
+                <span class="text-warning font-weight-bold">{{ log.status }}</span>
+              {% elif log.status == "DUPLICATE" %}
+                <span class="text-info font-weight-bold">{{ log.status }}</span>
+              {% else %}
+                <span class="text-secondary">{{ log.status }}</span>
+              {% endif %}
+            </td>
+            <td>{{ log.reason }}</td>
+            <td><small>{{ log.raw_payload }}</small></td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="11" class="text-center text-muted">No payment logs available</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-danger mt-4">
+      You do not have permission to view Payment Logs.
+    </div>
+  {% endif %}
+{% endblock %}

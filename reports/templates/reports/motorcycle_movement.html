@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Motorcycle Movement Report{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4 text-primary">Motorcycle Movement Report</h2>
+
+  <!-- Filter Form -->
+  <form method="get" class="row g-3 mb-3 align-items-end">
+    <div class="col-md-3">
+      <input type="text" name="vin" class="form-control"
+             placeholder="Enter Motorcycle VIN" value="{{ vin }}">
+    </div>
+    <div class="col-md-3">
+      <input type="date" name="start_date" class="form-control"
+             value="{{ start_date|date:'Y-m-d' }}">
+    </div>
+    <div class="col-md-3">
+      <input type="date" name="end_date" class="form-control"
+             value="{{ end_date|date:'Y-m-d' }}">
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-primary w-100">Filter</button>
+    </div>
+  </form>
+
+  {% if motorcycle %}
+    <h5 class="mb-3">
+      Results for VIN: {{ motorcycle.vin }}
+      {% if start_date and end_date %}
+        (from {{ start_date|date:"Y-m-d" }} to {{ end_date|date:"Y-m-d" }})
+      {% endif %}
+    </h5>
+
+    <!-- ✅ Export buttons preserve VIN and date filters -->
+    <div class="mb-3">
+      <a href="?vin={{ vin }}&start_date={{ start_date|date:'Y-m-d' }}&end_date={{ end_date|date:'Y-m-d' }}&format=excel"
+         class="btn btn-success btn-sm">Export to Excel</a>
+      <a href="?vin={{ vin }}&start_date={{ start_date|date:'Y-m-d' }}&end_date={{ end_date|date:'Y-m-d' }}&format=pdf"
+         class="btn btn-danger btn-sm">Export to PDF</a>
+    </div>
+
+    <div class="card">
+      <div class="card-body table-responsive p-0">
+        <table class="table table-striped table-hover text-nowrap">
+          <thead class="table-light">
+            <tr>
+              <th>Date</th>
+              <th>Event</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for e in events %}
+              <tr>
+                <td>{{ e.date|date:"Y-m-d" }}</td>
+                <td>
+                  {% if e.event == "Created" %}
+                    <span class="badge bg-success">{{ e.event }}</span>
+                  {% elif e.event == "Warehouse" %}
+                    <span class="badge bg-primary">{{ e.event }}</span>
+                  {% elif e.event == "Movement" %}
+                    <span class="badge bg-warning text-dark">{{ e.event }}</span>
+                  {% elif e.event == "Invoice" %}
+                    <span class="badge bg-info text-dark">{{ e.event }}</span>
+                  {% elif e.event == "Payment" %}
+                    <span class="badge bg-danger">{{ e.event }}</span>
+                  {% else %}
+                    <span class="badge bg-secondary">{{ e.event }}</span>
+                  {% endif %}
+                </td>
+                <td>{{ e.details }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="3" class="text-center text-muted">No movement events recorded.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% else %}
+    <p class="text-muted">Please enter a valid VIN and date range to view the movement report.</p>
+  {% endif %}
+</div>
+{% endblock %}

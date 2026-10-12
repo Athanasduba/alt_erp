@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Agent Performance Report{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4 text-primary">Agent Performance Report</h2>
+  {% include "reports/_export_buttons.html" %}
+  <div class="card">
+    <div class="card-body table-responsive p-0">
+      <table class="table table-hover text-nowrap">
+        <thead>
+          <tr>
+            <th>Agent</th>
+            <th>Sales Count</th>
+            <th>Customer Count</th>
+            <th>Rating</th>  <!-- ✅ new column -->
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in agents %}
+            <tr>
+              <td>{{ a.display_name }}</td>
+              <td>{{ a.sales_count }}</td>
+              <td>{{ a.customer_count }}</td>
+              <td>
+                {% if a.rating == "Poor" or a.rating == "Bad" %}
+                  <span class="badge bg-danger">{{ a.rating }}</span>
+                {% elif a.rating == "At least" %}
+                  <span class="badge bg-warning text-dark">{{ a.rating }}</span>
+                {% elif a.rating == "Reasonable" %}
+                  <span class="badge bg-info text-dark">{{ a.rating }}</span>
+                {% elif a.rating == "Satisfactory" %}
+                  <span class="badge bg-primary">{{ a.rating }}</span>
+                {% elif a.rating == "Best" %}
+                  <span class="badge bg-success">{{ a.rating }}</span>
+                {% elif a.rating == "Excellent" %}
+                  <span class="badge bg-success">{{ a.rating }}</span>
+                {% else %}
+                  <span class="badge bg-secondary">{{ a.rating }}</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="4">No agents found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

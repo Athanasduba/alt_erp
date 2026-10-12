@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Agent Commission{% endblock %}
+{% block page_header %}Agent Commission{% endblock %}
+{% block content %}
+
+<div class="card card-secondary">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h3 class="card-title">Agent Commission Balances</h3>
+    <a href="{% url 'commission_payout' %}" class="btn btn-success btn-sm">
+      <i class="fas fa-money-check-alt"></i> Pay Commission
+    </a>
+  </div>
+  <div class="card-body table-responsive p-0">
+    <table class="table table-hover text-nowrap">
+      <thead>
+        <tr>
+          <th>Agent</th>
+          <th>Accrued Commission</th>
+          <th>Last Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for account in agent_accounts %}
+          <tr>
+            <td>{{ account.agent.full_name }}</td>
+            <td><span class="badge badge-info">{{ account.accrued_commission }}</span></td>
+            <td>{{ account.updated_at|date:"Y-m-d H:i" }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="3">No agent commission records found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card card-dark mt-3">
+  <div class="card-header">
+    <h3 class="card-title">Commission Payout History</h3>
+  </div>
+  <div class="card-body table-responsive p-0">
+    <table class="table table-hover text-nowrap">
+      <thead>
+        <tr>
+          <th>Agent</th>
+          <th>Amount Paid</th>
+          <th>Paid On</th>
+          <th>Receipt</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for payout in commission_payouts %}
+          <tr>
+            <td>{{ payout.agent.full_name }}</td>
+            <td><span class="badge badge-success">{{ payout.amount }}</span></td>
+            <td>{{ payout.paid_on|date:"Y-m-d H:i" }}</td>
+            <td>
+              <a href="{% url 'agent_receipt_pdf' payout.id %}" class="btn btn-sm btn-primary">
+                <i class="fas fa-file-pdf"></i> Download
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4">No commission payouts found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

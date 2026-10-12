@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_header %}{{ title }}{% endblock %}
+{% block content %}
+
+<div class="card card-primary">
+  <div class="card-header">
+    <h3 class="card-title">{{ title }}</h3>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    <div class="card-body">
+      {% for field in form %}
+        {% if field.name not in "new_password1 new_password2" %}
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+            {% if field.name == "role" %}
+              <!-- ✅ Role dropdown -->
+              <select name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control select2">
+                {% for choice in field.field.choices %}
+                  <option value="{{ choice.0 }}" {% if field.value == choice.0 %}selected{% endif %}>
+                    {{ choice.1 }}
+                  </option>
+                {% endfor %}
+              </select>
+
+            {% elif field.name == "warehouses" %}
+              <!-- ✅ Warehouses multi-select dropdown -->
+              <select name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control select2-multi" multiple>
+                {% for choice in field.field.queryset %}
+                  <option value="{{ choice.pk }}" {% if choice.pk in field.value %}selected{% endif %}>
+                    {{ choice }}
+                  </option>
+                {% endfor %}
+              </select>
+
+            {% else %}
+              {{ field }}
+            {% endif %}
+
+            {% for error in field.errors %}
+              <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% if request.user.role == "ADMIN" %}
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              {{ form.new_password1.label_tag }}
+              {{ form.new_password1 }}
+              {% for error in form.new_password1.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              {{ form.new_password2.label_tag }}
+              {{ form.new_password2 }}
+              {% for error in form.new_password2.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+    <div class="card-footer">
+      <button type="submit" class="btn btn-primary">Save</button>
+      <a href="{% url 'user_management' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<!-- ✅ Select2 Initialization -->
+<script>
+  $(function () {
+    // Role dropdown
+    $('.select2').select2({ theme: 'bootstrap4' });
+
+    // Warehouses dropdown with checkboxes
+    $('.select2-multi').select2({
+      theme: 'bootstrap4',
+      closeOnSelect: false,
+      placeholder: 'Select Warehouses',
+      allowClear: true
+    });
+  });
+</script>
+
+{% endblock %}

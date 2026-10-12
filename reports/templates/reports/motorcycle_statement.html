@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Motorcycle Statement Report{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4 text-primary">Motorcycle Statement Report</h2>
+
+  <!-- Filter Form -->
+  <form method="get" class="row g-3 mb-3 align-items-end">
+    <div class="col-md-3">
+      <input type="text" name="vin" class="form-control"
+             placeholder="Enter Motorcycle VIN" value="{{ vin }}">
+    </div>
+    <div class="col-md-3">
+      <input type="date" name="start_date" class="form-control" value="{{ start_date|date:'Y-m-d' }}">
+    </div>
+    <div class="col-md-3">
+      <input type="date" name="end_date" class="form-control" value="{{ end_date|date:'Y-m-d' }}">
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-primary w-100">Filter</button>
+    </div>
+  </form>
+
+  {% if motorcycle %}
+    <h5 class="mb-3">
+      Results for VIN: {{ motorcycle.vin }}
+      {% if customer_name %} | Customer: {{ customer_name }}{% endif %}
+      {% if agent_name %} | Agent: {{ agent_name }}{% endif %}
+      {% if start_date and end_date %}
+        | Period: {{ start_date|date:"Y-m-d" }} to {{ end_date|date:"Y-m-d" }}
+      {% endif %}
+    </h5>
+
+    <!-- Export buttons -->
+    <div class="mb-3">
+      <a href="?vin={{ vin }}&start_date={{ start_date|date:'Y-m-d' }}&end_date={{ end_date|date:'Y-m-d' }}&format=excel"
+         class="btn btn-success">Export to Excel</a>
+      <a href="?vin={{ vin }}&start_date={{ start_date|date:'Y-m-d' }}&end_date={{ end_date|date:'Y-m-d' }}&format=pdf"
+         class="btn btn-danger">Export to PDF</a>
+    </div>
+
+    <!-- Summary block -->
+    <div class="card mb-3">
+      <div class="card-body p-0">
+        <table class="table table-bordered text-nowrap mb-0">
+          <tbody>
+            <tr><td><strong>Opening Balance</strong></td><td>{{ opening_balance|floatformat:2 }} Tsh</td></tr>
+            <tr><td><strong>Total Invoices</strong></td><td>{{ total_invoices|floatformat:2 }} Tsh</td></tr>
+            <tr><td><strong>Total Payments</strong></td><td>{{ total_payments|floatformat:2 }} Tsh</td></tr>
+            <tr><td><strong>Total Agent Commission</strong></td><td>{{ total_commission|floatformat:2 }} Tsh</td></tr>
+            <tr><td><strong>Closing Balance</strong></td><td>{{ closing_balance|floatformat:2 }} Tsh</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Transaction table -->
+    <div class="card">
+      <div class="card-body table-responsive p-0">
+        <table class="table table-striped table-hover text-nowrap">
+          <thead class="table-light">
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Reference</th>
+              <th>Amount (Tsh)</th>
+              <th>Agent Commission (Tsh)</th>
+              <th>Running Balance (Tsh)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in combined_entries %}
+              <tr class="
+                {% if entry.type == 'Invoice' %}table-danger
+                {% elif entry.type == 'Payment' %}table-success
+                {% elif entry.type == 'Ledger Entry' %}table-primary
+                {% endif %}
+              ">
+                <td>{{ entry.date|date:"Y-m-d" }}</td>
+                <td><span class="badge bg-info text-dark">{{ entry.type }}</span></td>
+                <td>{{ entry.reference }}</td>
+                <td>{{ entry.amount|floatformat:2 }}</td>
+                <td>
+                  {% if entry.commission %}
+                    {{ entry.commission|floatformat:2 }}
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+                <td>{{ entry.running_balance|floatformat:2 }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="6" class="text-center text-muted">No statement entries found.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot class="table-light">
+            <tr>
+              <td colspan="3"><strong>Totals</strong></td>
+              <td><strong>{{ total_invoices|floatformat:2 }} Tsh</strong></td>
+              <td><strong>{{ total_commission|floatformat:2 }} Tsh</strong></td>
+              <td><strong>{{ closing_balance|floatformat:2 }} Tsh</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  {% else %}
+    <p class="text-muted">Please enter a valid VIN and date range to view the statement.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,381 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-4 onboarding-form">
+    <h2 class="mb-3 text-center">Customer Onboarding</h2>
+
+    <!-- 🔴 Error Summary -->
+    {% if customer_form.errors or installment_form.errors or lease_form.errors %}
+    <div class="card border-danger mb-3">
+        <div class="card-header bg-danger text-white">Form Errors</div>
+        <div class="card-body">
+            <ul class="mb-0">
+                <!-- Customer form errors -->
+                {% for field in customer_form %}
+                    {% for error in field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in customer_form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+
+                <!-- Installment form errors -->
+                {% for field in installment_form %}
+                    {% for error in field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in installment_form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+
+                <!-- Lease form errors -->
+                {% for field in lease_form %}
+                    {% for error in field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in lease_form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        <!-- Customer Info Card -->
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">Customer Information</div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Onboarding Type</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.onboarding_type class="form-control" %}
+                        {% if customer_form.onboarding_type.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.onboarding_type.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Full Name</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.full_name class="form-control" %}
+                        {% if customer_form.full_name.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.full_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Mobile Number</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.mobile_number class="form-control" %}
+                        {% if customer_form.mobile_number.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.mobile_number.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Nearest Warehouse</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.nearest_warehouse class="form-control" %}
+                        {% if customer_form.nearest_warehouse.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.nearest_warehouse.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Motorcycle</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.motorcycle class="form-control" %}
+                        {% if customer_form.motorcycle.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.motorcycle.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Officer in Charge</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.officer_in_charge class="form-control" %}
+                        {% if customer_form.officer_in_charge.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.officer_in_charge.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contract Upload -->
+        <div class="card mb-3">
+            <div class="card-header bg-dark text-white">Customer Contract</div>
+            <div class="card-body form-group row">
+                <label class="col-sm-4 col-form-label">Contract</label>
+                <div class="col-sm-8">
+                    {% render_field customer_form.contract class="form-control" %}
+                    {% if customer_form.contract.errors %}
+                        <div class="invalid-feedback d-block">{{ customer_form.contract.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Agent Info Card -->
+        <div class="card mb-3" id="agent-card">
+            <div class="card-header bg-info text-white">Agent Information</div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Agent</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.agent class="form-control" %}
+                        {% if customer_form.agent.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.agent.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Agent Commission %</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.agent_commission_percent class="form-control" %}
+                        {% if customer_form.agent_commission_percent.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.agent_commission_percent.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guarantor 1 -->
+        <div class="card mb-3">
+            <div class="card-header bg-warning">Guarantor 1</div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Name</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.guarantor1_name class="form-control" %}
+                        {% if customer_form.guarantor1_name.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.guarantor1_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Mobile</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.guarantor1_mobile class="form-control" %}
+                        {% if customer_form.guarantor1_mobile.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.guarantor1_mobile.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Address</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.guarantor1_address class="form-control" %}
+                        {% if customer_form.guarantor1_address.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.guarantor1_address.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">National ID</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.guarantor1_national_id class="form-control" %}
+                        {% if customer_form.guarantor1_national_id.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.guarantor1_national_id.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                <!-- Guarantor 2 -->
+        <div class="card mb-3">
+            <div class="card-header bg-warning">Guarantor 2</div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Name</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.guarantor2_name class="form-control" %}
+                        {% if customer_form.guarantor2_name.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.guarantor2_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Mobile</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.guarantor2_mobile class="form-control" %}
+                        {% if customer_form.guarantor2_mobile.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.guarantor2_mobile.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Address</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.guarantor2_address class="form-control" %}
+                        {% if customer_form.guarantor2_address.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.guarantor2_address.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">National ID</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.guarantor2_national_id class="form-control" %}
+                        {% if customer_form.guarantor2_national_id.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.guarantor2_national_id.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Model -->
+        <div class="card mb-3">
+            <div class="card-header bg-success text-white">Payment Model</div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Payment Model</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.payment_model class="form-control" %}
+                        {% if customer_form.payment_model.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.payment_model.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group row" id="cash-section">
+                    <label class="col-sm-4 col-form-label">Cash Amount</label>
+                    <div class="col-sm-8">
+                        {% render_field customer_form.cash_amount class="form-control" %}
+                        {% if customer_form.cash_amount.errors %}
+                            <div class="invalid-feedback d-block">{{ customer_form.cash_amount.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Installment Plan -->
+                <div id="installment-section" class="mt-3" style="display:none;">
+                    <h5 class="text-info">Installment Plan</h5>
+                    {% for field in installment_form %}
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">{{ field.label }}</label>
+                            <div class="col-sm-8">
+                                {% render_field field class="form-control" %}
+                                {% if field.errors %}
+                                    <div class="invalid-feedback d-block">{{ field.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Lease Plan -->
+                <div id="lease-section" class="mt-3" style="display:none;">
+                    <h5 class="text-secondary">Lease Plan</h5>
+                    {% for field in lease_form %}
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">{{ field.label }}</label>
+                            <div class="col-sm-8">
+                                {% render_field field class="form-control" %}
+                                {% if field.errors %}
+                                    <div class="invalid-feedback d-block">{{ field.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ Submit button -->
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">Save Customer</button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const onboardingType = document.getElementById("id_onboarding_type");
+    const agentCard = document.getElementById("agent-card");
+    const paymentModelSelect = document.getElementById("id_payment_model");
+    const cashSection = document.getElementById("cash-section");
+    const installmentSection = document.getElementById("installment-section");
+    const leaseSection = document.getElementById("lease-section");
+    const warehouseSelect = document.getElementById("id_nearest_warehouse");
+    const motorcycleSelect = document.getElementById("id_motorcycle");
+    const form = document.querySelector("form"); // ✅ added
+
+    function toggleAgentCard() {
+        agentCard.style.display = (onboardingType.value === "DIRECT") ? "none" : "block";
+    }
+
+    function togglePaymentSections() {
+        const value = paymentModelSelect.value;
+
+        // Cash
+        cashSection.style.display = (value === "CASH") ? "block" : "none";
+        Array.from(cashSection.querySelectorAll("input, select")).forEach(el => {
+            el.disabled = (value !== "CASH");
+        });
+
+        // Installment
+        installmentSection.style.display = (value === "INSTALLMENT") ? "block" : "none";
+        Array.from(installmentSection.querySelectorAll("input, select")).forEach(el => {
+            el.disabled = (value !== "INSTALLMENT");
+        });
+
+        // Lease
+        leaseSection.style.display = (value === "LEASE") ? "block" : "none";
+        Array.from(leaseSection.querySelectorAll("input, select")).forEach(el => {
+            el.disabled = (value !== "LEASE");
+        });
+    }
+
+
+    function toggleMotorcycleAvailability() {
+        if (!warehouseSelect.value) {
+            motorcycleSelect.disabled = true;
+            motorcycleSelect.innerHTML = "<option value=''>Select warehouse first</option>";
+        } else {
+            motorcycleSelect.disabled = false;
+            fetch(`/customers/available-motorcycles/${warehouseSelect.value}/`)
+                .then(response => response.json())
+                .then(data => {
+                    motorcycleSelect.innerHTML = "";
+                    if (data.length === 0) {
+                        motorcycleSelect.innerHTML = "<option value=''>No motorcycles available</option>";
+                    } else {
+                        data.forEach(m => {
+                            const opt = document.createElement("option");
+                            opt.value = m.id;
+                            opt.textContent = m.label;
+                            opt.style.color = m.color;
+                            motorcycleSelect.appendChild(opt);
+                        });
+                    }
+                });
+        }
+    }
+
+    onboardingType.addEventListener("change", toggleAgentCard);
+    paymentModelSelect.addEventListener("change", togglePaymentSections);
+    warehouseSelect.addEventListener("change", toggleMotorcycleAvailability);
+
+    // ✅ Ensure correct section visible before submit
+    form.addEventListener("submit", function() {
+        togglePaymentSections();
+    });
+
+    // Initial state
+    toggleAgentCard();
+    togglePaymentSections();
+    toggleMotorcycleAvailability();
+});
+</script>
+{% endblock %}

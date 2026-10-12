@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Add Motorcycle{% endblock %}
+{% block page_header %}Add Motorcycle{% endblock %}
+{% block content %}
+
+<div class="card card-primary">
+  <div class="card-header">
+    <h3 class="card-title">New Motorcycle</h3>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    <div class="card-body">
+      <div class="form-group">
+        <label for="vin">VIN</label>
+        <input type="text" name="vin" id="vin" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="model">Model</label>
+        <input type="text" name="model" id="model" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="warehouse">Warehouse</label>
+        <select name="warehouse" id="warehouse" class="form-control">
+          {% for warehouse in warehouses %}
+            <option value="{{ warehouse.id }}">{{ warehouse.name }} ({{ warehouse.get_type_display }})</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="card-footer text-right">
+      <button type="submit" class="btn btn-primary">Save</button>
+      <a href="{% url 'warehouse_list' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

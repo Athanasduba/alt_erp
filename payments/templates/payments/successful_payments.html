@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Successful Payments</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Customer</th>
+                <th>Motorcycle VIN</th>
+                <th>Company Number</th>
+                <th>Reference VIN</th>
+                <th>Invoice Amount</th>
+                <th>Amount Paid</th>
+                <th>Credit</th>
+                <th>Arrears</th>
+                <th>Agent Commission</th>
+                <th>Bank Account</th>
+                <th>Mobile Number</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in payments %}
+            <tr>
+                <td>{{ p.transaction_id }}</td>
+                <td>{% if p.customer %}{{ p.customer.full_name }}{% else %}Unknown Customer{% endif %}</td>
+                <td>{% if p.motorcycle %}{{ p.motorcycle.vin }}{% else %}No VIN{% endif %}</td>
+                <td>{% if p.company_number %}{{ p.company_number }}{% else %}No Company Number{% endif %}</td>
+                <td>{% if p.reference_vin %}{{ p.reference_vin }}{% else %}No Reference VIN{% endif %}</td>
+                <td>{{ p.invoice_amount|default:"0" }}</td>
+                <td>{{ p.amount_paid|default:"0" }}</td>
+                <td>{{ p.credit|default:"0" }}</td>
+                <td>{{ p.arrears|default:"0" }}</td>
+                <td>{{ p.agent_commission|default:"0" }}</td>
+                <td>{% if p.bank_account %}{{ p.bank_account }}{% else %}Not Provided{% endif %}</td>
+                <td>{% if p.mobile_number %}{{ p.mobile_number }}{% else %}Not Provided{% endif %}</td>
+                <td>{{ p.timestamp|default:"N/A" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="13">No successful payments found</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

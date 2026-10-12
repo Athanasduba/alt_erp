@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Motorcycle Details{% endblock %}
+{% block page_header %}Motorcycle Details{% endblock %}
+
+{% block content %}
+<style>
+  /* --- Ultra-compact professional layout with divider --- */
+  .history-entry {
+    border-left: none;
+    margin-bottom: 0.35rem;
+    padding: 0.25rem 0.4rem;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+  }
+  .history-entry strong {
+    color: #343a40;
+  }
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.2em 0.4em;
+  }
+  .card-body p {
+    margin-bottom: 0.2rem;
+  }
+  .card-header {
+    padding: 0.4rem 0.6rem;
+  }
+  /* Reduce horizontal spacing between columns */
+  .row.no-gutters {
+    margin-right: -5px;
+    margin-left: -5px;
+  }
+  .row.no-gutters > [class^="col-"],
+  .row.no-gutters > [class*=" col-"] {
+    padding-right: 0.4rem;
+    padding-left: 0.4rem;
+  }
+  /* Add subtle divider between columns */
+  .divider-col {
+    border-left: 1px solid #dee2e6;
+  }
+  /* Compact card body */
+  .card-body {
+    padding: 0.6rem 0.8rem;
+  }
+</style>
+
+<div class="card mb-2">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h6 class="card-title mb-0">{{ motorcycle.model }} ({{ motorcycle.vin }})</h6>
+    <span class="badge 
+      {% if motorcycle.status == 'NEW' %}badge-primary
+      {% elif motorcycle.status == 'AVAILABLE' %}badge-success
+      {% elif motorcycle.status == 'SOLD' %}badge-dark
+      {% elif motorcycle.status == 'LEASED' %}badge-warning
+      {% elif motorcycle.status == 'RETAINED' %}badge-danger
+      {% elif motorcycle.status == 'RESOLD' %}badge-info
+      {% elif motorcycle.status == 'DELETED' %}badge-secondary
+      {% endif %}
+    ">
+      {{ motorcycle.get_status_display }}
+    </span>
+  </div>
+  <div class="card-body py-1">
+    <div class="row no-gutters">
+      <div class="col-md-6">
+        <p><strong>Frame Number:</strong> {{ motorcycle.frame_number }}</p>
+        <p><strong>Engine Number:</strong> {{ motorcycle.engine_number }}</p>
+        <p><strong>Brand:</strong> {{ motorcycle.brand }}</p>
+        <p><strong>Color:</strong> {{ motorcycle.color }}</p>
+        <p><strong>Category:</strong> {{ motorcycle.get_category_display }}</p>
+      </div>
+      <div class="col-md-6 divider-col">
+        <p><strong>Warehouse:</strong> {{ motorcycle.warehouse }}</p>
+        <p><strong>Customer:</strong> {{ motorcycle.customer_account }}</p>
+        <p><strong>Agent:</strong> {{ motorcycle.agent }}</p>
+        <p><strong>Created By:</strong> {{ motorcycle.created_by }}</p>
+        <p><strong>Created At:</strong> {{ motorcycle.created_at|date:"Y-m-d H:i" }}</p>
+        <p><strong>Last Updated:</strong> {{ motorcycle.updated_at|date:"Y-m-d H:i" }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header py-1">
+    <h6 class="card-title mb-0">Lifecycle History</h6>
+  </div>
+  <div class="card-body py-1">
+    {% for h in history %}
+    <div class="history-entry">
+      <div class="d-flex justify-content-between align-items-center">
+        <span class="text-muted small">{{ h.timestamp|date:"Y-m-d H:i" }}</span>
+        <span class="badge 
+          {% if h.action == 'CREATED' %}badge-primary
+          {% elif h.action == 'UPDATED' %}badge-warning
+          {% elif h.action == 'DELETED' %}badge-secondary
+          {% elif h.action == 'MOVED_TO_WAREHOUSE' %}badge-success
+          {% elif h.action == 'SOLD' %}badge-dark
+          {% elif h.action == 'LEASED' %}badge-warning
+          {% elif h.action == 'RETAINED' %}badge-danger
+          {% elif h.action == 'RESOLD' %}badge-info
+          {% endif %}
+        ">
+          {{ h.get_action_display }}
+        </span>
+      </div>
+      <p class="mb-0 small"><strong>{{ h.performed_by }}</strong> — {{ h.notes }}</p>
+    </div>
+    {% empty %}
+    <p class="small text-muted">No history records found.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

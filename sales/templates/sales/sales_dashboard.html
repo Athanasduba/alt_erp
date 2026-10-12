@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Sales Dashboard</h2>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center bg-success text-white shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Cash Sales</h5>
+                    <p class="card-text display-6">{{ summary.cash_count|default:"0" }}</p>
+                    <p class="card-text"><strong>Total:</strong> {{ summary.cash_total|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center bg-warning shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Installment Sales</h5>
+                    <p class="card-text display-6">{{ summary.installment_count|default:"0" }}</p>
+                    <p class="card-text"><strong>Total:</strong> {{ summary.installment_total|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center bg-primary text-white shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Amount Paid</h5>
+                    <p class="card-text display-6">{{ summary.amount_paid|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center bg-danger text-white shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Balance Remaining</h5>
+                    <p class="card-text display-6">{{ summary.balance_remaining|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales Records Table -->
+    <h4>Sales Records</h4>
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th>Sale ID</th>
+                <th>Customer</th>
+                <th>Motorcycle</th>
+                <th>Payment Type</th>
+                <th>Total Amount</th>
+                <th>Amount Paid</th>
+                <th>Balance</th>
+                <th>Agent Commission</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale in sales %}
+            <tr>
+                <td>{{ sale.id }}</td>
+                <td>{{ sale.customer.full_name }}</td>
+                <td>{{ sale.motorcycle }}</td>
+                <td>{{ sale.payment_type }}</td>
+                <td>{{ sale.total_amount }}</td>
+                <td>{{ sale.amount_paid }}</td>
+                <td>{{ sale.balance_remaining }}</td>
+                <td>
+                    {% with commission=sale.sale_payments.aggregate_sum %}
+                        {{ commission|default:"0" }}
+                    {% endwith %}
+                </td>
+                <td>
+                    <a href="{% url 'sale_detail' sale.id %}" class="btn btn-sm btn-info">View</a>
+                    <a href="{% url 'add_payment' sale.id %}" class="btn btn-sm btn-success">Add Payment</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="9">No sales records found</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

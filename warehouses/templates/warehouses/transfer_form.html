@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Initiate Transfer{% endblock %}
+{% block page_header %}Initiate Transfer{% endblock %}
+{% block content %}
+
+<div class="card card-info">
+  <div class="card-header">
+    <h3 class="card-title">New Transfer Request</h3>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    <div class="card-body">
+      <div class="form-group">
+        <label for="from_warehouse">Source Warehouse</label>
+        <select name="from_warehouse" id="from_warehouse" class="form-control" required>
+          {% for warehouse in warehouses %}
+            <option value="{{ warehouse.id }}">{{ warehouse.name }} ({{ warehouse.get_type_display }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="to_warehouse">Destination Warehouse</label>
+        <select name="to_warehouse" id="to_warehouse" class="form-control" required>
+          {% for warehouse in warehouses %}
+            <option value="{{ warehouse.id }}">{{ warehouse.name }} ({{ warehouse.get_type_display }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="motorcycles">Select Motorcycles</label>
+        <div class="form-check">
+          {% for motorcycle in motorcycles %}
+            <input type="checkbox" name="motorcycles" value="{{ motorcycle.id }}" id="mc{{ motorcycle.id }}" class="form-check-input">
+            <label for="mc{{ motorcycle.id }}" class="form-check-label">
+              {{ motorcycle.vin }} - {{ motorcycle.model }} (Warehouse: {{ motorcycle.warehouse.name }})
+            </label><br>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="card-footer text-right">
+      <button type="submit" class="btn btn-primary">Submit Transfer</button>
+      <a href="{% url 'warehouse_list' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

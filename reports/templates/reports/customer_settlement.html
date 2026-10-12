@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Customer Settlement Report{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4 text-primary">Customer Settlement Report</h2>
+  {% include "reports/_export_buttons.html" %}
+  <div class="card">
+    <div class="card-body table-responsive p-0">
+      <table class="table table-hover text-nowrap">
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Motorcycle VIN</th>
+            <th>Agent</th>
+            <th>Arrears</th>
+            <th>Remaining Balance</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in report_data %}
+            <tr>
+              <td>{{ row.0 }}</td>
+              <td>{{ row.1 }}</td>
+              <td>{{ row.2 }}</td>
+              <td>{{ row.3|floatformat:2 }}</td>
+              <td>{{ row.4|floatformat:2 }}</td>
+              <td>
+                {% if row.5 == "Unsettled" %}
+                  <span class="badge bg-danger">Unsettled</span>
+                {% else %}
+                  <span class="badge bg-success">Settled</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="6" class="text-center text-muted">No customers found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

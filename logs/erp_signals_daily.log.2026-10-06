@@ -1,0 +1,66 @@
+[2026-10-06 11:03:01,168] INFO customers.signals: [Customer Signal] Fired for moto moto (PENDING, LEASE)
+[2026-10-06 11:03:01,174] INFO invoices.signals: [Invoice Signal] Fired for moto moto (PENDING, LEASE)
+[2026-10-06 11:03:01,178] INFO invoices.signals: [Invoice Signal] Fired for moto moto (PENDING, LEASE)
+[2026-10-06 11:03:01,179] INFO customers.signals: [Financial Signal] Updated balances for moto moto after LeasePlan save.
+[2026-10-06 11:04:16,466] INFO customers.signals: [Customer Signal] Fired for moto moto (APPROVED, LEASE)
+[2026-10-06 11:04:16,501] INFO notifications.signals: [Notification Signal] Invoice CUST00176-MC 421 ETO-83F6DC created for moto moto
+[2026-10-06 11:04:16,628] INFO customers.signals: [Invoice Signal] Lease invoice created for moto moto due 2026-10-13
+[2026-10-06 11:04:16,629] INFO invoices.signals: [Invoice Signal] Fired for moto moto (APPROVED, LEASE)
+[2026-10-06 11:04:16,630] INFO invoices.signals: [Invoice Signal] Lease invoices handled by customer signals and tasks for moto moto
+[2026-10-06 11:34:02,475] INFO customers.signals: [Customer Signal] Fired for Cocolau (PENDING, LEASE)
+[2026-10-06 11:34:02,479] INFO invoices.signals: [Invoice Signal] Fired for Cocolau (PENDING, LEASE)
+[2026-10-06 11:34:02,483] INFO invoices.signals: [Invoice Signal] Fired for Cocolau (PENDING, LEASE)
+[2026-10-06 11:34:02,484] INFO customers.signals: [Financial Signal] Updated balances for Cocolau after LeasePlan save.
+[2026-10-06 11:34:09,500] INFO customers.signals: [Customer Signal] Fired for Cocolau (APPROVED, LEASE)
+[2026-10-06 11:34:09,520] INFO notifications.signals: [Notification Signal] Invoice CUST00177-MC 421 ETO-31767E created for Cocolau
+[2026-10-06 11:34:09,658] INFO customers.signals: [Invoice Signal] Lease invoice created for Cocolau due 2026-10-13
+[2026-10-06 11:34:09,671] INFO invoices.signals: [Invoice Signal] Fired for Cocolau (APPROVED, LEASE)
+[2026-10-06 11:34:09,673] INFO invoices.signals: [Invoice Signal] Lease invoices handled by customer signals and tasks for Cocolau
+[2026-10-06 12:03:19,877] INFO customers.signals: [Customer Signal] Fired for Mwamba (PENDING, LEASE)
+[2026-10-06 12:03:19,877] INFO invoices.signals: [Invoice Signal] Fired for Mwamba (PENDING, LEASE)
+[2026-10-06 12:03:19,882] INFO invoices.signals: [Invoice Signal] Fired for Mwamba (PENDING, LEASE)
+[2026-10-06 12:03:19,883] INFO customers.signals: [Financial Signal] Updated balances for Mwamba after LeasePlan save.
+[2026-10-06 12:03:25,350] INFO customers.signals: [Customer Signal] Fired for Mwamba (APPROVED, LEASE)
+[2026-10-06 12:03:25,369] INFO invoices.signals: [Invoice Signal] Fired for Mwamba (APPROVED, LEASE)
+[2026-10-06 12:03:25,372] INFO invoices.signals: [Invoice Signal] Lease invoices handled by customer signals and tasks for Mwamba
+[2026-10-06 12:46:41,018] INFO customers.signals: [Customer Signal] Fired for Masha (PENDING, LEASE)
+[2026-10-06 12:46:41,018] INFO invoices.signals: [Invoice Signal] Fired for Masha (PENDING, LEASE)
+[2026-10-06 12:46:41,026] INFO invoices.signals: [Invoice Signal] Fired for Masha (PENDING, LEASE)
+[2026-10-06 12:46:41,027] INFO customers.signals: [Financial Signal] Updated balances for Masha after LeasePlan save.
+[2026-10-06 12:46:50,321] INFO customers.signals: [Customer Signal] Fired for Masha (APPROVED, LEASE)
+[2026-10-06 12:46:50,470] INFO invoices.signals: [Invoice Signal] Fired for Masha (APPROVED, LEASE)
+[2026-10-06 12:46:50,475] INFO invoices.signals: [Invoice Signal] Lease invoices handled by customer signals and tasks for Masha
+[2026-10-06 13:07:43,981] INFO customers.signals: [Customer Signal] Fired for Booker (PENDING, LEASE)
+[2026-10-06 13:07:43,981] INFO invoices.signals: [Invoice Signal] Fired for Booker (PENDING, LEASE)
+[2026-10-06 13:07:43,988] INFO invoices.signals: [Invoice Signal] Fired for Booker (PENDING, LEASE)
+[2026-10-06 13:07:43,990] INFO customers.signals: [Financial Signal] Updated balances for Booker after LeasePlan save.
+[2026-10-06 13:07:48,639] INFO customers.signals: [Customer Signal] Fired for Booker (APPROVED, LEASE)
+[2026-10-06 13:07:48,765] INFO invoices.signals: [Invoice Signal] Fired for Booker (APPROVED, LEASE)
+[2026-10-06 13:07:48,771] INFO invoices.signals: [Invoice Signal] Lease invoices handled by Celery for Booker
+[2026-10-06 13:12:01,506] INFO customers.signals: [Customer Signal] Fired for Booker (APPROVED, LEASE)
+[2026-10-06 13:12:01,527] INFO invoices.signals: [Invoice Signal] Fired for Booker (APPROVED, LEASE)
+[2026-10-06 13:12:01,533] INFO invoices.signals: [Invoice Signal] Lease invoices handled by Celery for Booker
+[2026-10-06 13:12:01,607] INFO notifications.signals: [Notification Signal] Invoice MC222BBB0012 created for Booker
+[2026-10-06 19:08:00,076] INFO customers.signals: [Customer Signal] Fired for Mkoloni (PENDING, LEASE)
+[2026-10-06 19:08:00,078] INFO invoices.signals: [Invoice Signal] Fired for Mkoloni (PENDING, LEASE)
+[2026-10-06 19:08:00,086] INFO invoices.signals: [Invoice Signal] Fired for Mkoloni (PENDING, LEASE)
+[2026-10-06 19:08:00,087] INFO customers.signals: [Financial Signal] Updated balances for Mkoloni after LeasePlan save.
+[2026-10-06 19:08:14,888] INFO customers.signals: [Customer Signal] Fired for Mkoloni (APPROVED, LEASE)
+[2026-10-06 19:08:15,188] INFO invoices.signals: [Invoice Signal] Fired for Mkoloni (APPROVED, LEASE)
+[2026-10-06 19:08:15,469] INFO notifications.signals: [Notification Signal] Invoice MC200PPP0006 created for Mkoloni
+[2026-10-06 19:29:21,529] INFO customers.signals: [Customer Signal] Fired for Mkoloni (APPROVED, LEASE)
+[2026-10-06 19:29:21,687] INFO invoices.signals: [Invoice Signal] Fired for Mkoloni (APPROVED, LEASE)
+[2026-10-06 19:54:34,705] INFO customers.signals: [Customer Signal] Fired for Booker (APPROVED, LEASE)
+[2026-10-06 19:54:34,867] INFO invoices.signals: [Invoice Signal] Fired for Booker (APPROVED, LEASE)
+[2026-10-06 20:05:51,024] INFO customers.signals: [Customer Signal] Fired for Masha (APPROVED, LEASE)
+[2026-10-06 20:05:51,189] INFO invoices.signals: [Invoice Signal] Fired for Masha (APPROVED, LEASE)
+[2026-10-06 20:08:58,370] INFO customers.signals: [Customer Signal] Fired for Cocolau (APPROVED, LEASE)
+[2026-10-06 20:08:58,497] INFO invoices.signals: [Invoice Signal] Fired for Cocolau (APPROVED, LEASE)
+[2026-10-06 20:19:19,911] INFO customers.signals: [Customer Signal] Fired for Mwamba (APPROVED, LEASE)
+[2026-10-06 20:19:20,036] INFO invoices.signals: [Invoice Signal] Fired for Mwamba (APPROVED, LEASE)
+[2026-10-06 20:19:20,052] INFO payments.signals: [Invoice Signal] Fired for Mwamba (APPROVED, LEASE)
+[2026-10-06 20:19:20,109] INFO notifications.signals: [Notification Signal] Invoice MC123AAA0006 created for Mwamba
+[2026-10-06 20:20:23,151] INFO customers.signals: [Customer Signal] Fired for Mkoloni (APPROVED, LEASE)
+[2026-10-06 20:20:23,297] INFO invoices.signals: [Invoice Signal] Fired for Mkoloni (APPROVED, LEASE)
+[2026-10-06 20:23:06,326] INFO customers.signals: [Customer Signal] Fired for Booker (APPROVED, LEASE)
+[2026-10-06 20:23:06,470] INFO invoices.signals: [Invoice Signal] Fired for Booker (APPROVED, LEASE)

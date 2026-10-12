@@ -1,0 +1,8 @@
+<h2>Sales</h2>
+<ul>
+    {% for sale in sales %}
+        <li><a href="{% url 'sale_detail' sale.id %}">{{ sale }}</a></li>
+    {% empty %}
+        <li>No sales found.</li>
+    {% endfor %}
+</ul>

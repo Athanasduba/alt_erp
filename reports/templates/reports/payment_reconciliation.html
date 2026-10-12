@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Payment Reconciliation Report{% endblock %}
+{% block content %}
+<div class="container-fluid">
+
+  <!-- Header with search + totals -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-primary">Payment Reconciliation Report</h2>
+    <form method="get" class="d-flex">
+      <input type="text" name="vin" value="{{ vin_query }}" class="form-control me-2" placeholder="Search by VIN">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+  </div>
+
+  <!-- Totals summary -->
+  <div class="mb-3">
+    <strong>Total Invoices:</strong> {{ total_invoices }} |
+    <strong>Total Payments:</strong> {{ total_payments }} |
+    <strong>Net Balance:</strong> {{ net_balance }}
+  </div>
+
+  {% include "reports/_export_buttons.html" %}
+  <div class="card">
+    <div class="card-body table-responsive p-0">
+      <table class="table table-hover text-nowrap">
+        <thead>
+          <tr>
+            <th>Reference (VIN)</th>
+            <th>Customer</th> <!-- ✅ new column -->
+            <th>Type (ID)</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for inv in invoices %}
+            <tr>
+              <td>{{ inv.motorcycle.vin }}</td>
+              <td>{{ inv.customer.full_name }}</td> <!-- ✅ customer name -->
+              <td>Invoice ({{ inv.invoice_id }})</td>
+              <td>{{ inv.amount_due }}</td>
+              <td>
+                {% if inv.status == "PAID" %}
+                  <span class="badge bg-success">{{ inv.status }}</span>
+                {% elif inv.status == "PENDING" %}
+                  <span class="badge bg-warning text-dark">{{ inv.status }}</span>
+                {% elif inv.status in "OVERDUE DEFAULTED FAILED" %}
+                  <span class="badge bg-danger">{{ inv.status }}</span>
+                {% else %}
+                  <span class="badge bg-secondary">{{ inv.status }}</span>
+                {% endif %}
+              </td>
+              <td>Invoice Date: {{ inv.created_at|date:"Y-m-d" }}</td>
+              <td>{{ inv.balance_remaining }}</td>
+            </tr>
+          {% endfor %}
+
+          {% for pay in payments %}
+            <tr>
+              <td>{{ pay.invoice.motorcycle.vin }}</td>
+              <td>{{ pay.invoice.customer.full_name }}</td> <!-- ✅ customer name from linked invoice -->
+              <td>Payment ({{ pay.id }})</td>
+              <td>{{ pay.amount }}</td>
+              <td>
+                {% if pay.status == "SUCCESS" %}
+                  <span class="badge bg-success">{{ pay.status }}</span>
+                {% elif pay.status == "FAILED" %}
+                  <span class="badge bg-danger">{{ pay.status }}</span>
+                {% else %}
+                  <span class="badge bg-secondary">{{ pay.status }}</span>
+                {% endif %}
+              </td>
+              <td>Payment Date: {{ pay.timestamp|date:"Y-m-d" }}</td>
+              <td>-</td>
+            </tr>
+          {% endfor %}
+
+          {% if invoices|length == 0 and payments|length == 0 %}
+            <tr><td colspan="7">No records found.</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

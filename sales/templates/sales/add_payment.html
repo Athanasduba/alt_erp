@@ -1,0 +1,6 @@
+<h2>Add Payment for Sale {{ sale.id }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Payment</button>
+</form>

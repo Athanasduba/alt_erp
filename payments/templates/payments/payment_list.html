@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>All Payments</h2>
+
+    <!-- ✅ Filter dropdown -->
+    <form method="get" class="mb-3">
+        <div class="row">
+            <div class="col-md-4">
+                <select name="status" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Filter by Status --</option>
+                    <option value="FULL" {% if request.GET.status == "FULL" %}selected{% endif %}>Full</option>
+                    <option value="PARTIAL" {% if request.GET.status == "PARTIAL" %}selected{% endif %}>Partial</option>
+                    <option value="SETTLED" {% if request.GET.status == "SETTLED" %}selected{% endif %}>Settled</option>
+                    <option value="FAILED" {% if request.GET.status == "FAILED" %}selected{% endif %}>Failed</option>
+                    <option value="REGENERATED" {% if request.GET.status == "REGENERATED" %}selected{% endif %}>Re-generated</option>
+                </select>
+            </div>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Customer</th>
+                <th>Motorcycle VIN</th>
+                <th>Company Number</th>
+                <th>Reference VIN</th>
+                <th>Invoice Amount</th>
+                <th>Amount Paid</th>
+                <th>Credit</th>
+                <th>Arrears</th>
+                <th>Agent Commission</th>
+                <th>Bank Account</th>
+                <th>Mobile Number</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in payments %}
+            <tr>
+                <td>{{ p.transaction_id }}</td>
+                <td>
+                    {% if p.customer %}
+                        {{ p.customer.full_name }}
+                    {% else %}
+                        Unknown Customer
+                    {% endif %}
+                </td>
+                <td>
+                    {% if p.motorcycle %}
+                        {{ p.motorcycle.vin }}
+                    {% else %}
+                        No VIN
+                    {% endif %}
+                </td>
+                <td>
+                    {% if p.company_number %}
+                        {{ p.company_number }}
+                    {% else %}
+                        No Company Number
+                    {% endif %}
+                </td>
+                <td>
+                    {% if p.reference_vin %}
+                        {{ p.reference_vin }}
+                    {% else %}
+                        No Reference VIN
+                    {% endif %}
+                </td>
+                <td>{{ p.invoice_amount|default:"0" }}</td>
+                <td>{{ p.amount_paid|default:"0" }}</td>
+                <td>{{ p.credit|default:"0" }}</td>
+                <td>{{ p.arrears|default:"0" }}</td>
+                <td>{{ p.agent_commission|default:"0" }}</td>
+                <td>
+                    {% if p.bank_account %}
+                        {{ p.bank_account }}
+                    {% else %}
+                        Not Provided
+                    {% endif %}
+                </td>
+                <td>
+                    {% if p.mobile_number %}
+                        {{ p.mobile_number }}
+                    {% else %}
+                        Not Provided
+                    {% endif %}
+                </td>
+                <td>
+                    {% if p.status == "REGENERATED" %}
+                        <span class="badge bg-info">Re-generated</span>
+                    {% elif p.status == "FAILED" %}
+                        <span class="badge bg-danger">Failed</span>
+                    {% elif p.status == "FULL" %}
+                        <span class="badge bg-success">Full</span>
+                    {% elif p.status == "PARTIAL" %}
+                        <span class="badge bg-warning">Partial</span>
+                    {% elif p.status == "SETTLED" %}
+                        <span class="badge bg-primary">Settled</span>
+                    {% else %}
+                        {{ p.status|default:"Unknown" }}
+                    {% endif %}
+                </td>
+                <td>{{ p.timestamp|default:"N/A" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="14">No payments found</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

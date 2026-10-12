@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Approve Repossession{% endblock %}
+{% block page_header %}Approve Repossession{% endblock %}
+{% block content %}
+
+<div class="card card-warning">
+  <div class="card-header">
+    <h3 class="card-title">Repossession Approval</h3>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    <div class="card-body">
+      <p><strong>Motorcycle:</strong> {{ repossession.motorcycle.vin }} - {{ repossession.motorcycle.model }}</p>
+      <p><strong>Customer:</strong> {{ repossession.customer.name }}</p>
+      <p><strong>Warehouse:</strong> {{ repossession.warehouse.name }}</p>
+      <p><strong>Officer In Charge:</strong> {{ repossession.officer_in_charge }}</p>
+      <p><strong>Status:</strong> {{ repossession.get_status_display }}</p>
+
+      <div class="form-group">
+        <label for="reason">Reason (if denying)</label>
+        <textarea name="reason" id="reason" class="form-control"></textarea>
+      </div>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+      <button type="submit" name="action" value="deny" class="btn btn-danger">Deny</button>
+      <a href="{% url 'warehouse_list' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+<h2>Sale {{ sale.id }}</h2>
+<p>Customer: {{ sale.customer.full_name }}</p>
+<p>Motorcycle: {{ sale.motorcycle }}</p>
+<p>Total Amount: {{ sale.total_amount }}</p>
+<p>Amount Paid: {{ sale.amount_paid }}</p>
+<p>Balance Remaining: {{ sale.balance_remaining }}</p>
+
+<h3>Payments</h3>
+<ul>
+    {% for payment in sale.sale_payments.all %}
+        <li>{{ payment.amount }} via {{ payment.method }} ({{ payment.reference }})</li>
+    {% empty %}
+        <li>No payments yet.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'add_payment' sale.id %}">Add Payment</a>

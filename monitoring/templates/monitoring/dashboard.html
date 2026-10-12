@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">System Logs – Monitoring Dashboard</h2>
+
+    <!-- Celery Task Logs -->
+    <h4>Task Logs</h4>
+
+    <!-- 🔎 Filter Form -->
+    <form method="get" class="form-inline mb-3">
+        <label for="status" class="mr-2">Status:</label>
+        <select name="status" id="status" class="form-control mr-2">
+            <option value="">All</option>
+            <option value="SUCCESS">Success</option>
+            <option value="FAILURE">Failure</option>
+            <option value="PENDING">Pending</option>
+        </select>
+
+        <label for="task_name" class="mr-2">Task:</label>
+        <input type="text" name="task_name" id="task_name" class="form-control mr-2"
+               placeholder="Task name">
+
+        <label for="search" class="mr-2">Search Result:</label>
+        <input type="text" name="search" id="search" class="form-control mr-2"
+               placeholder="Result text">
+
+        <label for="start_date" class="mr-2">From:</label>
+        <input type="date" name="start_date" id="start_date" class="form-control mr-2">
+
+        <label for="end_date" class="mr-2">To:</label>
+        <input type="date" name="end_date" id="end_date" class="form-control mr-2">
+
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+
+    <!-- Task Logs Table -->
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>Task Name</th>
+                <th>Status</th>
+                <th>Completed At</th>
+                <th>Result</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in page_obj %}
+            <tr>
+                <td>{{ task.task_name }}</td>
+                <td>
+                    {% if task.status == "SUCCESS" %}
+                        <span class="badge badge-success">SUCCESS</span>
+                    {% elif task.status == "FAILURE" %}
+                        <span class="badge badge-danger">FAILURE</span>
+                    {% else %}
+                        <span class="badge badge-warning">{{ task.status }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ task.date_done }}</td>
+                <td>{{ task.result|truncatechars:80 }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center">No tasks logged yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ✅ Pagination Controls -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

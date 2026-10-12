@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Approve Transfer{% endblock %}
+{% block page_header %}Approve Transfer{% endblock %}
+{% block content %}
+
+<div class="card card-info">
+  <div class="card-header">
+    <h3 class="card-title">Transfer Approval</h3>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    <div class="card-body">
+      <p><strong>Motorcycle:</strong> {{ transfer.motorcycle.vin }} - {{ transfer.motorcycle.model }}</p>
+      <p><strong>From Warehouse:</strong> {{ transfer.from_warehouse.name }}</p>
+      <p><strong>To Warehouse:</strong> {{ transfer.to_warehouse.name }}</p>
+      <p><strong>Initiated By:</strong> {{ transfer.initiated_by }}</p>
+      <p><strong>Status:</strong> {{ transfer.get_status_display }}</p>
+
+      <div class="form-group">
+        <label for="reason">Reason (if denying or returning)</label>
+        <textarea name="reason" id="reason" class="form-control"></textarea>
+      </div>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+      <button type="submit" name="action" value="deny" class="btn btn-danger">Deny</button>
+      <button type="submit" name="action" value="return" class="btn btn-warning">Return for Correction</button>
+      <a href="{% url 'warehouse_list' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

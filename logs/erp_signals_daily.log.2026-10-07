@@ -1,0 +1,21 @@
+[2026-10-07 11:16:15,291] INFO customers.signals: [Customer Signal] Fired for Mkoloni (APPROVED, LEASE)
+[2026-10-07 11:16:15,422] INFO invoices.signals: [Invoice Signal] Fired for Mkoloni (APPROVED, LEASE)
+[2026-10-07 11:19:58,520] INFO customers.signals: [Customer Signal] Fired for Heka (PENDING, LEASE)
+[2026-10-07 11:19:58,520] INFO invoices.signals: [Invoice Signal] Fired for Heka (PENDING, LEASE)
+[2026-10-07 11:19:58,529] INFO invoices.signals: [Invoice Signal] Fired for Heka (PENDING, LEASE)
+[2026-10-07 11:19:58,530] INFO customers.signals: [Financial Signal] Updated balances for Heka after LeasePlan save.
+[2026-10-07 11:20:07,082] INFO customers.signals: [Customer Signal] Fired for Heka (APPROVED, LEASE)
+[2026-10-07 11:20:07,109] INFO invoices.signals: [Invoice Signal] Fired for Heka (APPROVED, LEASE)
+[2026-10-07 11:20:07,180] INFO notifications.signals: [Notification Signal] Invoice MC321CCD0001 created for Heka
+[2026-10-07 12:01:27,154] INFO customers.signals: [Customer Signal] Fired for Heka (APPROVED, LEASE)
+[2026-10-07 12:01:27,269] INFO invoices.signals: [Invoice Signal] Fired for Heka (APPROVED, LEASE)
+[2026-10-07 12:01:27,275] INFO invoices.signals: [Invoice Signal] Skipped duplicate invoice for Heka (LEASE)
+[2026-10-07 15:49:19,124] INFO customers.signals: [Customer Signal] Fired for PDF (PENDING, INSTALLMENT)
+[2026-10-07 15:49:19,124] INFO invoices.signals: [Invoice Signal] Fired for PDF (PENDING, INSTALLMENT)
+[2026-10-07 15:49:19,127] INFO invoices.signals: [Invoice Signal] Fired for PDF (PENDING, INSTALLMENT)
+[2026-10-07 15:49:19,127] INFO customers.signals: [Financial Signal] Updated balances for PDF after InstallmentPlan save.
+[2026-10-07 15:49:19,128] INFO invoices.signals: [Invoice Signal] Fired for PDF (PENDING, INSTALLMENT)
+[2026-10-07 15:49:19,128] INFO customers.signals: [Commission Signal] Initial deposit commission set for PDF: 3000
+[2026-10-07 15:49:54,699] INFO customers.signals: [Customer Signal] Fired for PDF (APPROVED, INSTALLMENT)
+[2026-10-07 15:49:54,845] INFO invoices.signals: [Invoice Signal] Fired for PDF (APPROVED, INSTALLMENT)
+[2026-10-07 15:49:54,945] INFO notifications.signals: [Notification Signal] Invoice MC000KPM0001 created for PDF
