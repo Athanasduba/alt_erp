@@ -1,4 +1,0 @@
-web: gunicorn alt_erp.wsgi
-worker: celery -A alt_erp worker -l info -E
-beat: celery -A alt_erp beat -l info
-flower: celery -A alt_erp flower --port=5555

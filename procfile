@@ -1,0 +1,3 @@
+web: gunicorn alt_erp.wsgi
+worker: celery -A alt_erp worker -l info
+beat: celery -A alt_erp beat -l info
