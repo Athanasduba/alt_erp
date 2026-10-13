@@ -13,7 +13,9 @@ ALLOWED_HOSTS = []
 
 # Celery configuration
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+#CELERY_RESULT_BACKEND = 'redis://localhost:6379/0' #this is for local development
+CELERY_RESULT_BACKEND = 'django-db'#this is for production hosting in railways
+
 
 CELERY_BEAT_SCHEDULE = {
     # Nightly overdue invoice check
