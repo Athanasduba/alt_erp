@@ -163,6 +163,12 @@ SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_HTTPONLY = True
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://alterp-production.up.railway.app",
+    "https://alt-erp.com",  # add your custom domain if you’ll use it
+]
+
+
 # --- Authentication Redirects ---
 LOGIN_URL = '/users/login/'           # where unauthenticated users are sent
 LOGIN_REDIRECT_URL = '/dashboard/'    # where users go after successful login
