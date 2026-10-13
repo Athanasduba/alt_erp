@@ -4,6 +4,7 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler, TimedRotatingFileHandler
 import platform
+import dj_database_url   # ✅ added for Railway Postgres
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -15,7 +16,6 @@ ALLOWED_HOSTS = []
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 #CELERY_RESULT_BACKEND = 'redis://localhost:6379/0' #this is for local development
 CELERY_RESULT_BACKEND = 'django-db'#this is for production hosting in railways
-
 
 CELERY_BEAT_SCHEDULE = {
     # Nightly overdue invoice check
@@ -43,7 +43,6 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(day_of_week='monday', hour=1, minute=0),
     },
 }
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -106,15 +105,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'alt_erp.wsgi.application'
 
+# ✅ Updated database config for Railway
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'erp_db',
-        'USER': 'erp_user',
-        'PASSWORD': 'myuser1',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get("DATABASE_URL")
+    )
 }
 
 AUTH_USER_MODEL = 'users.User'
@@ -142,7 +137,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"  # for collectstatic in production
 MEDIA_URL = '/media/'
 #MEDIA_ROOT = BASE_DIR / "media"/"contracts"
 MEDIA_ROOT = BASE_DIR / "media"
-
 
 # --- Email ---
 MAILERS = {
@@ -233,7 +227,6 @@ LOGGING = {
         },
     },
 }
-
 
 # --- Celery Windows Compatibility ---
 if platform.system() == "Windows":
