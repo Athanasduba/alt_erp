@@ -14,12 +14,6 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://alterp-production.up.railway.app",
-    "https://alt-erp.com",  # add your custom domain if you’ll use it
-]
-
-
 # Celery configuration
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 #CELERY_RESULT_BACKEND = 'redis://localhost:6379/0' #this is for local development
@@ -162,6 +156,7 @@ MAILERS = {
     },
 }
 
+
 # --- Session Security ---
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 1800
@@ -169,6 +164,13 @@ SESSION_SAVE_EVERY_REQUEST = False
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_HTTPONLY = True
+
+# --- CSRF Trusted Origins ---
+CSRF_TRUSTED_ORIGINS = [
+    "https://alterp-production.up.railway.app",
+    # Add your custom domain if you’ll use it:
+    "https://alt-erp.com",
+]
 
 
 # --- Authentication Redirects ---
