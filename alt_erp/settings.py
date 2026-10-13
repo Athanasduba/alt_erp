@@ -75,13 +75,14 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',   # ✅ add here
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'users.middleware.SessionSecurityMiddleware',
+    'users.middleware.SessionSecurityMiddleware',   # keep your custom middleware last
 ]
 
 ROOT_URLCONF = 'alt_erp.urls'
@@ -139,6 +140,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",   # your custom CSS/JS/images
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"  # for collectstatic in production
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 # --- Media files ---
 MEDIA_URL = '/media/'
