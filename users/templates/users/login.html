@@ -82,6 +82,15 @@
         <h4 class="fw-bold app-name">ALTERNATIVE ERP</h4>
       </div>
 
+      <!-- Error messages -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-danger" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
       <form method="post">
         {% csrf_token %}
         <div class="mb-3">
@@ -106,9 +115,9 @@
 <!-- Carousel Loop Script -->
 <script>
   $('#companyCarousel').carousel({
-    interval: 2000,   // default interval
+    interval: 2000,
     wrap: true,
-    pause: false      // keep sliding even on hover
+    pause: false
   });
 </script>
 </body>

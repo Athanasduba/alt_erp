@@ -15,12 +15,17 @@ def login_view(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             login(request, user)
-            return redirect("role_redirect")
+            return redirect("role_redirect")  # send to role-based dashboard
         else:
+            # Add error message to be displayed in template
             messages.error(request, "Invalid username or password")
+
+    # Always render the login page, with any messages included
     return render(request, "users/login.html")
+
 
 @login_required
 def logout_view(request):
