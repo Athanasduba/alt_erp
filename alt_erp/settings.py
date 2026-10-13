@@ -157,18 +157,18 @@ MAILERS = {
 }
 
 
+
 # --- Session Security ---
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 1800
 SESSION_SAVE_EVERY_REQUEST = False
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
 
 # --- CSRF Trusted Origins ---
 CSRF_TRUSTED_ORIGINS = [
     "https://alterp-production.up.railway.app",
-    # Add your custom domain if you’ll use it:
     "https://alt-erp.com",
 ]
 
