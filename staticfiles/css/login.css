@@ -1,42 +1,80 @@
-/* General layout */
-body {
-  background-color: #f8f9fa;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+.carousel-item {
+  height: 100vh;
+}
+.advert-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Peel + fade effect */
+.peel-slide {
+  opacity: 0;
+  transform: rotateY(15deg) scale(1.05);
+  transition: opacity 1s ease, transform 1s ease;
+}
+.carousel-item.active.peel-slide {
+  opacity: 1;
+  transform: rotateY(0deg) scale(1);
+}
+
+/* Caption animation */
+.peel-caption {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+.carousel-item.active .peel-caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Advert placeholder */
+.advert-placeholder {
+  min-height: 100vh;
+  background: #111;
+}
+
+/* Login placeholder */
+.login-placeholder {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
 }
 
 /* Login card */
 .login-card {
-  background: rgba(255, 255, 255, 0.9); /* translucent effect */
+  max-width: 420px;
+  width: 100%;
+  background: #fff;
   border-radius: 12px;
-  transition: transform 0.2s ease-in-out;
-}
-.login-card:hover {
-  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
 }
 
-/* Logo */
+/* Logo + App name */
 .company-logo {
   max-height: 80px;
 }
 .app-name {
-  color: #0d6efd; /* Bootstrap primary blue */
+  color: #0d6efd;
+  font-weight: 700;
   letter-spacing: 2px;
 }
 
-/* Carousel images */
-.carousel-item img {
-  object-fit: cover;
-  height: 100%;
+/* Inputs + buttons */
+.form-control-lg {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
   border-radius: 8px;
 }
-
-/* Video styling */
-video {
+.btn-lg {
+  padding: 0.75rem;
+  font-size: 1rem;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
-
-/* Buttons */
 .btn-primary {
   background-color: #0d6efd;
   border: none;
@@ -44,4 +82,16 @@ video {
 }
 .btn-primary:hover {
   background-color: #0b5ed7;
+}
+
+/* Responsive: hide ads on mobile */
+@media (max-width: 767.98px) {
+  .advert-placeholder {
+    display: none;
+  }
+  .login-card {
+    max-width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
 }
