@@ -7,6 +7,7 @@ psycopg2>=2.9.9
 # Excel export
 XlsxWriter>=3.2.0
 xhtml2pdf>=0.2.10
+openpyxl>=3.1.0
 
 # PDF export
 reportlab>=4.0.0
