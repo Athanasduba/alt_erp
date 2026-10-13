@@ -10,7 +10,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-qsgk^n1$-x4^m*zu(kj3#*^$o0*bj4glfg8l^9esky7&ywc%kd'
 DEBUG = True
+
 ALLOWED_HOSTS = ["*"]
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://alterp-production.up.railway.app",
+    "https://alt-erp.com",  # add your custom domain if you’ll use it
+]
 
 
 # Celery configuration
@@ -162,11 +169,6 @@ SESSION_SAVE_EVERY_REQUEST = False
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_HTTPONLY = True
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://alterp-production.up.railway.app",
-    "https://alt-erp.com",  # add your custom domain if you’ll use it
-]
 
 
 # --- Authentication Redirects ---
