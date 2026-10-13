@@ -10,7 +10,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-qsgk^n1$-x4^m*zu(kj3#*^$o0*bj4glfg8l^9esky7&ywc%kd'
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "alterp-production.up.railway.app",  # Railway domain
+    "alt-erp.com",                       # Your custom domain
+    "www.alt-erp.com",                   # Optional, if you’ll use www
+    "localhost",                         # Local dev
+    "127.0.0.1"                          # Local dev
+]
+
 
 # Celery configuration
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
