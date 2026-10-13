@@ -106,9 +106,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'alt_erp.wsgi.application'
 
 # ✅ Updated database config for Railway
+raw_db_url = os.environ.get("DATABASE_URL")
+if raw_db_url and raw_db_url.startswith("postgresql://"):
+    raw_db_url = raw_db_url.replace("postgresql://", "postgres://", 1)
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
+    'default': dj_database_url.parse(
+        raw_db_url,
+        conn_max_age=600,
+        ssl_require=False
     )
 }
 
