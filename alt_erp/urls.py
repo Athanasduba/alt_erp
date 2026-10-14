@@ -7,7 +7,8 @@ from django.conf.urls.static import static
 
 # Redirect root URL "/" to the login page
 def root_redirect(request):
-    return redirect('login')   # resolves to /users/login/
+    # ✅ Explicitly redirect to /users/login/
+    return redirect("/users/login/")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
