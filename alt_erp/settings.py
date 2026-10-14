@@ -77,15 +77,16 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',   # ✅ keep here
+    'whitenoise.middleware.WhiteNoiseMiddleware',   # static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'users.middleware.SessionSecurityMiddleware',   # ✅ keep only this
+    'users.middleware.SessionSecurityMiddleware',   # custom, last
 ]
+
 
 
 ROOT_URLCONF = 'alt_erp.urls'

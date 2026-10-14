@@ -2,23 +2,8 @@ from django.shortcuts import redirect
 from django.utils.deprecation import MiddlewareMixin
 from django.contrib import messages
 
-RAILWAY_DOMAINS = [
-    "hefhjsz3.up.railway.app",
-    "alterp-production.up.railway.app",
-]
-
 class SessionSecurityMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        host = request.get_host()
-
-        # --- Force domain redirect ---
-        if host.startswith("www."):
-            new_url = request.build_absolute_uri().replace("://www.", "://")
-            return redirect(new_url, permanent=True)
-        if host in RAILWAY_DOMAINS:
-            new_url = request.build_absolute_uri().replace(host, "alt-erp.com")
-            return redirect(new_url, permanent=True)
-
         # --- Enforce session validity ---
         if not request.user.is_authenticated:
             if request.path.startswith('/users/login') or request.path.startswith('/static/') \
