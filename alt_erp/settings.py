@@ -84,16 +84,16 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',   # ✅ add here
+    'whitenoise.middleware.WhiteNoiseMiddleware',   # ✅ keep here
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'users.middleware.ForceDomainMiddleware',   # ✅ new line for doamin redirect
-    'users.middleware.SessionSecurityMiddleware',   # keep your custom middleware last
+    'users.middleware.SessionSecurityMiddleware',   # ✅ keep only this
 ]
+
 
 ROOT_URLCONF = 'alt_erp.urls'
 
