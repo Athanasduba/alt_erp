@@ -19,7 +19,7 @@ class SessionSecurityMiddleware(MiddlewareMixin):
             new_url = request.build_absolute_uri().replace(host, "alt-erp.com")
             return redirect(new_url, permanent=True)
 
-        # ✅ Do nothing if already alt-erp.com
+        # ✅ Skip redirect if already alt-erp.com
         if host == "alt-erp.com":
             return None
 
