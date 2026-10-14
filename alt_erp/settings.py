@@ -186,7 +186,6 @@ LOGIN_REDIRECT_URL = '/dashboard/'    # where users go after successful login
 LOGOUT_REDIRECT_URL = '/users/login/' # where users go after logout
 
 # --- Logging ---
-# --- Logging ---
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
