@@ -91,6 +91,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'users.middleware.ForceDomainMiddleware',   # ✅ new line for doamin redirect
     'users.middleware.SessionSecurityMiddleware',   # keep your custom middleware last
 ]
 
@@ -173,6 +174,11 @@ SESSION_SAVE_EVERY_REQUEST = False
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
+
+# Force HTTPS in production
+SECURE_SSL_REDIRECT = True
+
+
 
 # --- CSRF Trusted Origins ---
 CSRF_TRUSTED_ORIGINS = [
