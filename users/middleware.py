@@ -10,16 +10,16 @@ RAILWAY_DOMAINS = [
 class SessionSecurityMiddleware(MiddlewareMixin):
     """
     Middleware to enforce session validity:
+    - Redirects www and Railway domains to alt-erp.com
     - Redirects to login if session expired or invalid
     - Prevents access to dashboards without fresh credentials
     - Clears old messages when visiting login/logout so they don't leak
-    - Redirects www and Railway domains to alt-erp.com
     """
 
     def process_request(self, request):
         host = request.get_host()
 
-        # --- Force domain redirect ---
+        # --- Force domain redirect (no HTTPS here, Django handles it) ---
         if host.startswith("www."):
             new_url = request.build_absolute_uri().replace("://www.", "://")
             return redirect(new_url, permanent=True)
@@ -29,7 +29,6 @@ class SessionSecurityMiddleware(MiddlewareMixin):
 
         # --- Enforce session validity ---
         if not request.user.is_authenticated:
-            # Allow login page, static files, Selcom webhook, and Payment Logs
             if request.path.startswith('/users/login') or request.path.startswith('/static/') \
                or request.path == '/login/' \
                or request.path.startswith('/payments/selcom/webhook/') \
