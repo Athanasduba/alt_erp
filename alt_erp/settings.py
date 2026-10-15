@@ -6,6 +6,7 @@ from logging.handlers import RotatingFileHandler, TimedRotatingFileHandler
 import platform
 import dj_database_url   # ✅ added for Railway Postgres
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-qsgk^n1$-x4^m*zu(kj3#*^$o0*bj4glfg8l^9esky7&ywc%kd'
@@ -117,18 +118,39 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'alt_erp.wsgi.application'
 
-# ✅ Updated database config for Railway
-raw_db_url = os.environ.get("DATABASE_URL")
-if raw_db_url and raw_db_url.startswith("postgresql://"):
-    raw_db_url = raw_db_url.replace("postgresql://", "postgres://", 1)
 
-DATABASES = {
-    'default': dj_database_url.parse(
-        raw_db_url,
-        conn_max_age=600,
-        ssl_require=False
-    )
-}
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+raw_db_url = os.environ.get("DATABASE_URL")
+
+if raw_db_url:
+    # Ensure it's a clean string
+    if isinstance(raw_db_url, bytes):
+        raw_db_url = raw_db_url.decode("utf-8")
+    raw_db_url = str(raw_db_url).strip()
+
+    # Normalize scheme for dj_database_url
+    if raw_db_url.startswith("postgresql://"):
+        raw_db_url = raw_db_url.replace("postgresql://", "postgres://", 1)
+
+    DATABASES = {
+        'default': dj_database_url.parse(
+            raw_db_url,
+            conn_max_age=600,
+            ssl_require=False
+        )
+    }
+else:
+    # ✅ Fallback to SQLite if DATABASE_URL is not set
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / "db.sqlite3",
+        }
+    }
+
+
 
 AUTH_USER_MODEL = 'users.User'
 
