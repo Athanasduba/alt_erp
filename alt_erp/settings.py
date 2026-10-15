@@ -16,10 +16,16 @@ ALLOWED_HOSTS = ["alt-erp.com", "alterp-production.up.railway.app"]
 
 
 
-# Celery configuration
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# Celery configuration for Local deployment
+#CELERY_BROKER_URL = 'redis://localhost:6379/0'
 #CELERY_RESULT_BACKEND = 'redis://localhost:6379/0' #this is for local development
-CELERY_RESULT_BACKEND = 'django-db'#this is for production hosting in railways
+#CELERY_RESULT_BACKEND = 'django-db'#this is for production hosting in railways
+
+# Celery configuration for Production/LIVE deployment in Railways
+
+CELERY_BROKER_URL = os.environ.get("redis://default:gyPMWMCIOJFthPgfJMbyywDLFrhRVCbZ@redis.railway.internal:6379")
+CELERY_RESULT_BACKEND = os.environ.get("redis://default:gyPMWMCIOJFthPgfJMbyywDLFrhRVCbZ@redis.railway.internal:6379")
+
 
 CELERY_BEAT_SCHEDULE = {
     # Nightly overdue invoice check
