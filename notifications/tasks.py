@@ -11,7 +11,7 @@ def task_notify_invoice_generated(invoice_id):
     """
     Triggered when a new invoice is created.
     Queues SMS notifications for Customer, Agent, Officer, and Accountants as a group,
-    and logs completion once all are sent.
+    and logs each notification to NotificationLog.
     """
     from invoices.models import Invoice
     try:
@@ -30,19 +30,47 @@ def task_notify_invoice_generated(invoice_id):
         tasks = []
 
         # Customer
-        tasks.append(send_sms.s(getattr(customer, "mobile_number", None), sms_message,
-                                "CUSTOMER", customer.full_name, motorcycle.vin))
+        if getattr(customer, "mobile_number", None):
+            tasks.append(send_sms.s(customer.mobile_number, sms_message,
+                                    "CUSTOMER", customer.full_name, motorcycle.vin))
+            NotificationLog.objects.create(
+                role="CUSTOMER",
+                customer_name=customer.full_name,
+                motorcycle_vin=motorcycle.vin,
+                phone_number=customer.mobile_number,
+                message=sms_message,
+                sent_at=now(),
+                status="QUEUED"
+            )
 
         # Agent
         if customer.agent and getattr(customer.agent, "mobile_number", None):
             tasks.append(send_sms.s(customer.agent.mobile_number, sms_message,
                                     "AGENT", customer.full_name, motorcycle.vin))
+            NotificationLog.objects.create(
+                role="AGENT",
+                customer_name=customer.full_name,
+                motorcycle_vin=motorcycle.vin,
+                phone_number=customer.agent.mobile_number,
+                message=sms_message,
+                sent_at=now(),
+                status="QUEUED"
+            )
 
         # Officer
         officer_number = getattr(customer, "officer_number", None)
         if officer_number:
             tasks.append(send_sms.s(officer_number, sms_message,
                                     "OFFICER", customer.full_name, motorcycle.vin))
+            NotificationLog.objects.create(
+                role="OFFICER",
+                customer_name=customer.full_name,
+                motorcycle_vin=motorcycle.vin,
+                phone_number=officer_number,
+                message=sms_message,
+                sent_at=now(),
+                status="QUEUED"
+            )
 
         # Accountants
         accountants = User.objects.filter(role="ACCOUNTANT")
@@ -50,6 +78,15 @@ def task_notify_invoice_generated(invoice_id):
             if acc.phone_number:
                 tasks.append(send_sms.s(acc.phone_number, sms_message,
                                         "ACCOUNTANT", customer.full_name, motorcycle.vin))
+                NotificationLog.objects.create(
+                    role="ACCOUNTANT",
+                    customer_name=customer.full_name,
+                    motorcycle_vin=motorcycle.vin,
+                    phone_number=acc.phone_number,
+                    message=sms_message,
+                    sent_at=now(),
+                    status="QUEUED"
+                )
 
         # Run group with chord callback
         chord(group(tasks))(batch_complete.s(f"Invoice {invoice.invoice_id} notifications complete"))
@@ -62,7 +99,7 @@ def task_notify_payment_processed(payment_id):
     """
     Triggered when a payment is created.
     Queues SMS notifications for Customer, Agent, Officer, and Accountants as a group,
-    and logs completion once all are sent.
+    and logs each notification to NotificationLog.
     """
     from payments.models import Payment
     try:
@@ -86,19 +123,47 @@ def task_notify_payment_processed(payment_id):
         tasks = []
 
         # Customer
-        tasks.append(send_sms.s(getattr(customer, "mobile_number", None), sms_message,
-                                "CUSTOMER", customer.full_name, motorcycle.vin))
+        if getattr(customer, "mobile_number", None):
+            tasks.append(send_sms.s(customer.mobile_number, sms_message,
+                                    "CUSTOMER", customer.full_name, motorcycle.vin))
+            NotificationLog.objects.create(
+                role="CUSTOMER",
+                customer_name=customer.full_name,
+                motorcycle_vin=motorcycle.vin,
+                phone_number=customer.mobile_number,
+                message=sms_message,
+                sent_at=now(),
+                status="QUEUED"
+            )
 
         # Agent
         if customer.agent and getattr(customer.agent, "mobile_number", None):
             tasks.append(send_sms.s(customer.agent.mobile_number, sms_message,
                                     "AGENT", customer.full_name, motorcycle.vin))
+            NotificationLog.objects.create(
+                role="AGENT",
+                customer_name=customer.full_name,
+                motorcycle_vin=motorcycle.vin,
+                phone_number=customer.agent.mobile_number,
+                message=sms_message,
+                sent_at=now(),
+                status="QUEUED"
+            )
 
         # Officer
         officer_number = getattr(customer, "officer_number", None)
         if officer_number:
             tasks.append(send_sms.s(officer_number, sms_message,
                                     "OFFICER", customer.full_name, motorcycle.vin))
+            NotificationLog.objects.create(
+                role="OFFICER",
+                customer_name=customer.full_name,
+                motorcycle_vin=motorcycle.vin,
+                phone_number=officer_number,
+                message=sms_message,
+                sent_at=now(),
+                status="QUEUED"
+            )
 
         # Accountants
         accountants = User.objects.filter(role="ACCOUNTANT")
@@ -106,6 +171,15 @@ def task_notify_payment_processed(payment_id):
             if acc.phone_number:
                 tasks.append(send_sms.s(acc.phone_number, sms_message,
                                         "ACCOUNTANT", customer.full_name, motorcycle.vin))
+                NotificationLog.objects.create(
+                    role="ACCOUNTANT",
+                    customer_name=customer.full_name,
+                    motorcycle_vin=motorcycle.vin,
+                    phone_number=acc.phone_number,
+                    message=sms_message,
+                    sent_at=now(),
+                    status="QUEUED"
+                )
 
         # Run group with chord callback
         chord(group(tasks))(batch_complete.s(f"Payment {payment.transaction_id} notifications complete"))
