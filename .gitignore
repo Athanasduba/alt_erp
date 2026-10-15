@@ -17,7 +17,7 @@ celerybeat-schedule*
 *.pid
 
 # Static & media files (collected locally)
-#staticfiles/
+staticfiles/
 media/
 
 # IDE/editor settings
@@ -27,3 +27,6 @@ media/
 
 # Migrations cache (keep migration files, ignore pycache)
 */migrations/__pycache__/
+
+# Local database (only for dev, not Railway)
+db.sqlite3
