@@ -22,9 +22,8 @@ ALLOWED_HOSTS = ["alt-erp.com", "alterp-production.up.railway.app"]
 #CELERY_RESULT_BACKEND = 'django-db'#this is for production hosting in railways
 
 # Celery configuration for Production/LIVE deployment in Railways
-
-CELERY_BROKER_URL = os.environ.get("redis://default:gyPMWMCIOJFthPgfJMbyywDLFrhRVCbZ@redis.railway.internal:6379")
-CELERY_RESULT_BACKEND = os.environ.get("redis://default:gyPMWMCIOJFthPgfJMbyywDLFrhRVCbZ@redis.railway.internal:6379")
+CELERY_BROKER_URL = os.environ.get("REDIS_URL")
+CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL")
 
 
 CELERY_BEAT_SCHEDULE = {
