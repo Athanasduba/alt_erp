@@ -135,20 +135,15 @@ if raw_db_url:
         raw_db_url = raw_db_url.replace("postgresql://", "postgres://", 1)
 
     DATABASES = {
-        'default': dj_database_url.parse(
-            raw_db_url,
-            conn_max_age=600,
-            ssl_require=False
-        )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'erp_db',              # the database you created
+        'USER': 'erp_user',            # the Postgres user you created
+        'PASSWORD': 'myuser1', # the password you set
+        'HOST': 'localhost',          # database runs locally
+        'PORT': '5432',               # default Postgres port
     }
-else:
-    # ✅ Fallback to SQLite if DATABASE_URL is not set
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / "db.sqlite3",
-        }
-    }
+}
 
 
 
